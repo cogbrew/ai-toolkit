@@ -32,7 +32,7 @@ ai-toolkit/
 
 1. 본체를 `skills/<스킬 이름>/` 에 내부 구조 그대로 복사한다.
 2. 스킬 안의 인수 테스트가 있으면 새 위치에서 돌려 통과를 확인한다. `slop-rewrite` 는 `skills/slop-rewrite` 에서 `python3 -X utf8 .claude/skills/slop-rewrite/tests/run_acceptance.py` 로 돌린다.
-3. 도구마다 `ai-agents/<도구>/skills/<스킬 이름>/SKILL.md` 진입 파일 원본을 만든다. 형식은 아래 4번을 따른다.
+3. 도구마다 `ai-agents/<도구>/skills/<스킬 이름>/SKILL.md` 진입 파일 원본을 만든다. 형식은 아래 「진입 파일 형식」을 따른다.
 4. 전역 연결(심볼릭 링크)은 사용자가 한다. 에이전트는 링크를 만들지 않는다.
 
 ### 진입 파일 형식
@@ -60,7 +60,7 @@ description: <언제 이 스킬을 쓰는지와 트리거 문구>
 | 도구 | 링크가 걸리는 곳 | 저장소 안 원본 | 상태 |
 |---|---|---|---|
 | Claude | `~/.claude/skills/<스킬>` | `ai-agents/claude/skills/<스킬>/` | 확인됨 |
-| Codex | `~/.agents/skills/<스킬>` | `ai-agents/codex/skills/<스킬>/` | 공식 문서 요약으로만 확인. 링크 인식은 시험 전 |
+| Codex | `~/.agents/skills/<스킬>` | `ai-agents/codex/skills/<스킬>/` | 공식 문서 원문으로 확인(링크 폴더 지원 명시). 링크 인식은 시험 전 |
 | Antigravity (앱·CLI) | `~/.gemini/config/skills/<스킬>` | `ai-agents/antigravity/skills/<스킬>/` | 공식 문서로 확인. 링크 인식은 시험 전 |
 
 - Antigravity CLI 는 `~/.gemini/antigravity-cli/skills/` 와 `~/.gemini/skills/` 도 읽지만 앱은 읽지 않고 CLI 에서 우선순위가 가장 높다. 앱과 CLI 가 같이 쓰도록 `~/.gemini/config/skills/` 에 둔다.
