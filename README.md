@@ -1,0 +1,54 @@
+# ai-toolkit
+
+여러 AI 에이전트(Claude Code, Codex, Antigravity)에서 함께 쓰는 스킬과 공통 지침을 한 곳에서 관리하는 개인 저장소다. 원본은 여기서만 고치고, 각 도구에는 링크로 연결한다.
+
+## 구조
+
+```
+ai-toolkit/
+├── ai-agents/
+│   ├── AGENTS.md                공통 지침(모든 도구가 읽는 개인 규칙)
+│   ├── skills/                  모든 도구에 연결하는 스킬. 폴더 하나가 스킬 하나
+│   │   ├── cog-ai-toolkit/      이 저장소를 고칠 때 쓰는 유지보수 스킬
+│   │   └── slop-rewrite/        가져온 스킬(래퍼 폴더)
+│   └── <도구>/skills/           한 도구에만 쓰는 스킬
+└── scripts/                     install.sh(전역 연결), targets.conf(도구별 경로 표)
+```
+
+- 직접 만든 스킬의 이름은 `cog-` 로 시작한다. 접두사가 없는 스킬은 가져온 스킬이다.
+- 자세한 구조와 규칙은 `ai-agents/skills/cog-ai-toolkit/references/` 에 있다.
+
+## 설치
+
+```bash
+scripts/install.sh               # 계획만 출력한다(아무것도 만들지 않는다)
+scripts/install.sh --apply       # 계획대로 링크를 만든다
+scripts/install.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit-backup/ 으로 옮기고 연결한다
+```
+
+- 도구별 스킬 폴더에 스킬을 하나씩 링크하고, 공통 지침과 별칭 `~/.ai-toolkit`(이 저장소 위치)도 연결한다.
+- 이미 있는 항목은 덮어쓰지 않는다. 삭제하는 동작은 없다.
+- 도구별 경로는 `scripts/targets.conf` 에 있다.
+
+## 갱신 방법
+
+어느 도구에서든 어느 프로젝트에서든 `cog-ai-toolkit` 스킬을 직접 호출한다.
+
+| 도구 | 호출 |
+|---|---|
+| Claude Code | `/cog-ai-toolkit` |
+| Codex | `$cog-ai-toolkit` |
+| Antigravity | `/cog-ai-toolkit` |
+
+호출하면 에이전트가 이 저장소의 규칙과 절차(사본에서 먼저 고치기, 승인, 시험)를 따른다. 커밋과 push 는 사용자가 말할 때만 한다.
+
+## 가져온 스킬
+
+| 이름 | 비고 |
+|---|---|
+| `slop-rewrite` | 한국어 문서 윤문·검토. README 가 공개 사이트를 가리키고 MIT 라이선스 파일이 있다. 내부 구조는 바꾸지 않는다. |
+
+## 주의
+
+- 개인 자산이므로 비공개 저장소에서 관리한다. 비밀 정보(키, 토큰, 비밀번호)와 실명·이메일은 넣지 않는다.
+- `slop-rewrite` 의 개인 코멘트 폴더(`taste/`)는 그 스킬의 `.gitignore` 가 막는다.
