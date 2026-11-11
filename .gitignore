@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 비밀 정보
+.env
+.env.*
+!.env.example
+
+# 에디터
+.vscode/
+.idea/
+
+# Claude Code 개인 설정
+.claude/settings.local.json
