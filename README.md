@@ -13,6 +13,7 @@ ai-toolkit/
 │   │   ├── cog-code-writer/     코드를 쓸 때 지킬 기본 규칙
 │   │   ├── cog-django/          Django 백엔드 기본 구성 규칙
 │   │   ├── cog-vue/             Vue + Vite + Pinia + @nuxt/ui 프론트엔드 기본 규칙
+│   │   ├── cog-vue-uikit/       공용 UI 부품으로 만드는 화면 패턴(프레임워크별 폴더)
 │   │   ├── cog-report-writer/   보고서를 쓸 때 지킬 구성, 내용, 디자인 규칙
 │   │   └── slop-rewrite/        가져온 스킬(래퍼 폴더)
 │   └── <도구>/skills/           한 도구에만 쓰는 스킬
@@ -54,6 +55,7 @@ scripts/install.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit
 | `cog-code-writer` | 코드를 쓸 때 지킬 기본 규칙(주석, 예시 데이터, 함수와 파일, 한 곳에만 두기, 문서 확인, 검증). 공통 지침이 코드 작성 전에 호출하도록 지정함 |
 | `cog-django` | Django 백엔드의 기본 구성 규칙(디렉토리 구조, apps·modules 구성, settings 와 .env, accounts 와 core, 등록 위치, 조용히 깨지는 코드). 직접 호출(`/cog-django`)과 description 자동 호출을 씀 |
 | `cog-vue` | Vue 3 + Vite + Pinia + @nuxt/ui 프론트엔드의 기본 규칙(파일 위치와 앱 경계, 이름 짓기, 컴포넌트와 스토어 작성, 색과 타이포와 아이콘, Vite 설정과 VITE_ 환경변수와 린트). 화면 패턴(표, 상세, 헤더, 폼, 토스트)은 담지 않음. 직접 호출(`/cog-vue`)과 description 자동 호출을 씀 |
+| `cog-vue-uikit` | 공용 UI 부품(App* 부품, use* 컴포저블)으로 만드는 화면 패턴(목록, 읽기 전용 상세, 페이지 헤더, 토스트와 모달과 폼). 공통 원칙은 `references/common.md`, 구현은 `references/frameworks/<라이브러리>/`(지금은 `nuxt-ui`). 직접 호출(`/cog-vue-uikit`)과 description 자동 호출을 씀 |
 | `cog-report-writer` | 보고서를 쓸 때 지킬 구성과 내용 규칙(목적, 흐름, 리스크와 이슈 기준, 일관성)과 디자인(색, 배지, HTML 기본 CSS). 문체와 윤문은 `slop-rewrite` 가 맡음. 직접 호출(`/cog-report-writer`)과 description 자동 호출을 씀 |
 
 ## 가져온 스킬
