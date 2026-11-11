@@ -11,6 +11,7 @@ ai-toolkit/
 │   ├── skills/                  모든 도구에 연결하는 스킬. 폴더 하나가 스킬 하나
 │   │   ├── cog-ai-toolkit/      이 저장소를 고칠 때 쓰는 유지보수 스킬
 │   │   ├── cog-code-writer/     코드를 쓸 때 지킬 기본 규칙
+│   │   ├── cog-django/          Django 백엔드 기본 구성 규칙
 │   │   └── slop-rewrite/        가져온 스킬(래퍼 폴더)
 │   └── <도구>/skills/           한 도구에만 쓰는 스킬
 └── scripts/                     install.sh(전역 연결), targets.conf(도구별 경로 표)
@@ -49,6 +50,7 @@ scripts/install.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit
 |---|---|
 | `cog-ai-toolkit` | 이 저장소의 스킬과 지침을 만들거나 고칠 때의 규칙과 절차 |
 | `cog-code-writer` | 코드를 쓸 때 지킬 기본 규칙(주석, 예시 데이터, 함수와 파일, 한 곳에만 두기, 문서 확인, 검증). 공통 지침이 코드 작성 전에 호출하도록 지정함 |
+| `cog-django` | Django 백엔드의 기본 구성 규칙(디렉토리 구조, apps·modules 구성, settings 와 .env, accounts 와 core, 등록 위치, 조용히 깨지는 코드). 직접 호출(`/cog-django`)과 description 자동 호출을 씀 |
 
 ## 가져온 스킬
 
