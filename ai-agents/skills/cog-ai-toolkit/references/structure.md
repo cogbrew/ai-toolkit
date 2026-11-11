@@ -24,7 +24,7 @@ ai-toolkit/
 │   │       ├── SKILL.md             진입 파일(project/ 를 가리킴)
 │   │       └── project/             가져온 프로젝트 전체, 내부 구조 그대로
 │   └── <도구>/skills/<스킬 이름>/   그 도구에만 연결하는 전용 스킬
-└── scripts/                         install_ai-toolkit.sh(전역 연결), targets.conf(도구별 경로 표), install_mac_setting.sh(새 Mac 터미널 설정)
+└── scripts/                         install_ai_toolkit.sh(전역 연결), targets.conf(도구별 경로 표), install_mac_setting.sh(새 Mac 터미널 설정)
 ```
 
 - 스킬은 `ai-agents/skills/` 에 둔다. 폴더 하나를 도구의 전역 스킬 폴더에 그대로 링크하며, 래퍼 폴더의 진입 파일은 `project/` 를 가리키기만 하고 내용을 복제하지 않는다.

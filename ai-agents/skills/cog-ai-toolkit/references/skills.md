@@ -5,7 +5,7 @@
 1. 가져온 프로젝트를 `ai-agents/skills/<스킬 이름>/project/` 에 내부 구조 그대로 복사한다.
 2. 스킬 안의 인수 테스트가 있으면 새 위치에서 돌려 통과를 확인한다. `slop-rewrite` 는 `ai-agents/skills/slop-rewrite/project` 에서 `python3 -X utf8 .claude/skills/slop-rewrite/tests/run_acceptance.py` 로 돌린다.
 3. `ai-agents/skills/<스킬 이름>/SKILL.md` 진입 파일을 만든다. 형식은 아래 「진입 파일 형식」을 따른다.
-4. 전역 연결(심볼릭 링크)은 사용자가 `scripts/install_ai-toolkit.sh --apply` 로 한다. 에이전트는 `--apply` 를 실행하지 않는다. 옵션 없이 실행하면 계획만 출력하므로 에이전트도 실행할 수 있다.
+4. 전역 연결(심볼릭 링크)은 사용자가 `scripts/install_ai_toolkit.sh --apply` 로 한다. 에이전트는 `--apply` 를 실행하지 않는다. 옵션 없이 실행하면 계획만 출력하므로 에이전트도 실행할 수 있다.
 
 가져온 스킬이 표준 형식(폴더 바로 아래에 `SKILL.md` 가 있는 것)이면 래퍼 폴더 없이 `ai-agents/skills/<스킬 이름>/` 에 그대로 두고 3번은 건너뛴다.
 

@@ -17,7 +17,7 @@ ai-toolkit/
 │   │   ├── cog-report-writer/   보고서를 쓸 때 지킬 구성, 내용, 디자인 규칙
 │   │   └── slop-rewrite/        가져온 스킬(래퍼 폴더)
 │   └── <도구>/skills/           한 도구에만 쓰는 스킬
-└── scripts/                     install_ai-toolkit.sh(전역 연결), targets.conf(도구별 경로 표), install_mac_setting.sh(새 Mac 터미널 설정)
+└── scripts/                     install_ai_toolkit.sh(전역 연결), targets.conf(도구별 경로 표), install_mac_setting.sh(새 Mac 터미널 설정)
 ```
 
 - 직접 만든 스킬의 이름은 `cog-` 로 시작한다. 접두사가 없는 스킬은 가져온 스킬이다.
@@ -26,9 +26,9 @@ ai-toolkit/
 ## 설치
 
 ```bash
-scripts/install_ai-toolkit.sh               # 계획만 출력한다(아무것도 만들지 않는다)
-scripts/install_ai-toolkit.sh --apply       # 계획대로 링크를 만든다
-scripts/install_ai-toolkit.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit-backup/ 으로 옮기고 연결한다
+scripts/install_ai_toolkit.sh               # 계획만 출력한다(아무것도 만들지 않는다)
+scripts/install_ai_toolkit.sh --apply       # 계획대로 링크를 만든다
+scripts/install_ai_toolkit.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit-backup/ 으로 옮기고 연결한다
 ```
 
 - 도구별 스킬 폴더에 스킬을 하나씩 링크하고, 공통 지침과 별칭 `~/.ai-toolkit`(이 저장소 위치)도 연결한다.
