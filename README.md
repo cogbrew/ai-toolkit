@@ -10,6 +10,7 @@ ai-toolkit/
 │   ├── AGENTS.md                공통 지침(모든 도구가 읽는 개인 규칙)
 │   ├── skills/                  모든 도구에 연결하는 스킬. 폴더 하나가 스킬 하나
 │   │   ├── cog-ai-toolkit/      이 저장소를 고칠 때 쓰는 유지보수 스킬
+│   │   ├── cog-code-writer/     코드를 쓸 때 지킬 기본 규칙
 │   │   └── slop-rewrite/        가져온 스킬(래퍼 폴더)
 │   └── <도구>/skills/           한 도구에만 쓰는 스킬
 └── scripts/                     install.sh(전역 연결), targets.conf(도구별 경로 표)
@@ -41,6 +42,13 @@ scripts/install.sh --apply --backup   # 충돌한 기존 항목을 ~/.ai-toolkit
 | Antigravity | `/cog-ai-toolkit` |
 
 호출하면 에이전트가 이 저장소의 규칙과 절차(사본에서 먼저 고치기, 승인, 시험)를 따른다. 커밋과 push 는 사용자가 말할 때만 한다.
+
+## 직접 만든 스킬
+
+| 이름 | 용도 |
+|---|---|
+| `cog-ai-toolkit` | 이 저장소의 스킬과 지침을 만들거나 고칠 때의 규칙과 절차 |
+| `cog-code-writer` | 코드를 쓸 때 지킬 기본 규칙(주석, 예시 데이터, 함수와 파일, 한 곳에만 두기, 문서 확인, 검증). 공통 지침이 코드 작성 전에 호출하도록 지정함 |
 
 ## 가져온 스킬
 
