@@ -36,7 +36,7 @@
 - 공통 지침 7행 「미정으로 보고 제외」의 의미, 용어 변주(안·계획·설계, 승인·확인), 따옴표·가운뎃점·마침표 통일: 따름 시험에서 실패가 나오지 않아 보류했다.
 - 「스스로 커밋 금지」「비밀 정보 금지」를 hook·권한 설정으로도 강제할지.
 - 공통 지침을 각 도구의 전역 위치에 연결하는 방식은 `install_ai-toolkit.sh` 의 직접 링크로 구현했다. Codex·Antigravity 에서의 동작은 시험 전이다.
-- Antigravity 의 전역 규칙 파일 이름.
+- Antigravity 의 전역 지침은 `~/.gemini/AGENTS.md` 로 정했다(공식 문서 `antigravity.google/docs/rules` 에서 앱, CLI, IDE 가 모두 읽는 경로로 확인). 문서에 심볼릭 링크 지원 여부가 없어 링크 뒤 `agy` 에서 지침이 읽히는지 확인해야 한다. `AGENTS.md` 와 `GEMINI.md` 가 함께 있을 때의 우선순위는 문서에 없다.
 - `cog-ai-toolkit` 의 자동 호출을 돕는 전역 지침 안내는 두지 않았다. 직접 호출을 자주 잊으면 다시 검토한다. `cog-code-writer` 는 지침 한 줄을 두었다.
 - 직접 만든 스킬 4개(`cog-code-writer`, `cog-django`, `cog-vue`, `cog-report-writer`)는 사용자가 `install_ai-toolkit.sh --apply` 로 연결해야 쓸 수 있다.
 - `cog-django` 의 앱 구성(apps/분류/화면, app_v1·api_v1)과 core 의 권한 모델(Role, Menu, Feature)이 사용자의 모든 프로젝트에 공통인 규칙인지 확인하지 못했다. 프로젝트 하나(`infra-iscim-app`)를 근거로 일반 규칙이라 가정했다.
@@ -45,7 +45,7 @@
 - 후속 스킬 후보는 Django 인증과 권한, 배치와 외부 연동, DRF API 설계이고 순서는 정하지 않았다. 프로젝트 `infra-iscim-app` 의 `backend` 스킬과 `CLAUDE.md` 는 사용자 프로젝트라 바꾸지 않았고, 새 스킬로 바꿀지는 사용자가 정한다.
 - `cog-code-writer` 의 함수 분리, 이름 일관성 같은 규칙은 아직 시험하지 못했다.
 - 비대화형 시험에서 작업 폴더 밖 읽기와 `python` 실행은 승인이 필요했다. `ai-toolkit` 폴더를 읽기 허용 폴더로 등록할지는 사용자가 정한다(설정 변경).
-- Codex·Antigravity 에서의 스킬 인식, 직접 호출, `description` 호출 시험.
+- Codex 에서의 스킬 인식, 직접 호출, `description` 호출 시험. Antigravity 는 링크 스킬 7개가 `/skills` 에 표시되고, 링크로 연결한 `~/.gemini/AGENTS.md` 의 내용을 `agy` 가 전역 지침으로 읽는 것(코드 작성 전 호출 스킬을 묻자 `cog-code-writer` 로 답함)까지 확인했다(2026-11-11, 각 1회). 직접 호출과 `description` 호출은 시험 전이다.
 - `cog-vue` 의 apps/분류/화면 구성과 App*, use* 부품 이름이 사용자의 모든 프론트엔드 프로젝트에 공통인 규칙인지 확인하지 못했다. 프로젝트 하나를 근거로 일반 규칙이라 가정했다. 외부 `nuxt-ui` 스킬은 프로젝트에만 있고 전역에 없어 설치되어 있으면 읽는다는 조건부 문구로 두었다.
 - `cog-vue-uikit` 에는 `nuxt-ui` 폴더만 있다. 다른 UI 라이브러리를 쓰게 되면 `references/frameworks/<라이브러리>/` 에 패턴 파일 4개(data-list, detail-view, page-header, feedback-form)를 새로 만든다. 그 라이브러리의 공식 문서를 확인해서 쓰고, 지금은 만들지 않았다.
 - `cog-report-writer` 는 근거 자료(실제 보고서 샘플)가 없어 `slop-rewrite` 가이드라인을 참고해 만들었다. 제안 보고서의 본론 구성은 정하지 않았다. 색 코드와 CSS 는 현재 렌더링으로 다시 확인하지 않았다. 보고서를 실제로 쓰게 하는 동작 시험은 하지 않았다. 이 스킬의 흐름(요약을 맨 위)과 가이드라인의 유형별 순서가 어긋날 때의 우선순위는 에이전트가 정했고 사용자 확인이 필요하다.
