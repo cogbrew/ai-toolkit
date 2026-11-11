@@ -6,7 +6,7 @@
 - 스킬은 `ai-agents/skills/` 한 곳에 둔다: 최상위 `skills/` 를 없애고 `ai-agents/` 가 지침과 스킬을 함께 담는다. 세 도구가 같은 `SKILL.md` 형식을 읽으므로 진입 파일을 도구마다 두지 않고 한 벌만 둔다. 한 도구에만 쓰는 스킬은 `ai-agents/<도구>/skills/` 에 둔다.
 - 래퍼 폴더 방식: `slop-rewrite` 스크립트가 자기 위치에서 루트를 계산해 내부 구조를 바꿀 수 없다. 그래서 가져온 프로젝트를 `project/` 에 통째로 담고 진입 파일을 곁에 둔다. 상대경로만 쓰므로 저장소를 옮겨도 동작한다. Claude 에서 인식, 상대경로 따라가기, 스크립트 실행, 목록에 중복 없음을 시험했다.
 - 연결 스크립트(`scripts/install.sh`): 기본은 계획만 출력하고 `--apply` 로 실행한다. 스킬 하나마다 링크하며 도구 폴더 전체는 링크하지 않는다. 이미 있는 항목은 덮어쓰지 않고 `--backup` 일 때만 옮겨 둔다. 삭제 명령은 쓰지 않는다. 별칭 `~/.ai-toolkit`(저장소 위치)도 만든다. 도구별 경로와 예약 이름은 `scripts/targets.conf` 에 둔다.
-- 이름 규칙: 직접 만든 스킬만 `cog-` 접두사를 붙이고, 가져온 스킬(`slop-rewrite`, `taste-builder`, `styleguide-builder`)은 이름을 유지한다. 기존 `my-*` 스킬 4개는 복사하지 않고, 내용을 참고해 작성 기준과 시험을 거쳐 새로 만든다. `my-code-conventions` 는 `cog-code-writer` 로, `my-django-drf-conventions` 는 `cog-django` 로 다시 만들었다. `my-vue-nuxt-ui-conventions` 는 `cog-vue` 로 다시 만들었다. 나머지 1개(`my-write-report`)는 아직 만들지 않았다.
+- 이름 규칙: 직접 만든 스킬만 `cog-` 접두사를 붙이고, 가져온 스킬(`slop-rewrite`, `taste-builder`, `styleguide-builder`)은 이름을 유지한다. 기존 `my-*` 스킬 4개는 복사하지 않고, 내용을 참고해 작성 기준과 시험을 거쳐 새로 만든다. `my-code-conventions` 는 `cog-code-writer` 로, `my-django-drf-conventions` 는 `cog-django` 로 다시 만들었다. `my-vue-nuxt-ui-conventions` 는 `cog-vue` 로, `my-write-report` 는 `cog-report-writer` 로 다시 만들었다. 옛 `my-*` 스킬 4개의 재작성은 끝났다.
 - 공통 지침은 `ai-agents/AGENTS.md` 한 파일: 도구 전용 줄이 없어 한 파일로 시작했다. `ai-config` 의 공통 지침 49줄을 문체만 명사형으로 바꿔 옮겼다.
 - `ai-config` 는 이전이 끝난 뒤 쓰지 않는다.
 - 다루는 도구: Claude Code, Codex, Antigravity(앱·CLI). Antigravity IDE 는 쓰지 않는다. Gemini CLI 는 Antigravity CLI 로 대체되어 다루지 않는다.
@@ -22,6 +22,9 @@
 - `cog-vue` 에서 뺀 것: 데이터 테이블, 읽기 전용 상세, 페이지 헤더, 토스트와 모달 흐름, 폼 검증 같은 화면 패턴(옛 data-tables, detail-view, page-header, ux-patterns). 프로젝트 부품(AppDataTable, useListQuery 등)에 묶인 내용이 많아 후속 스킬 후보로 둔다. 옛 스킬의 특수기호, 옛 스킬 이름 참조(`my-code-conventions` 등), 프로젝트 고유 화면 예시는 넣지 않았다.
 - `cog-vue` 에 에이전트가 추가한 것(프로젝트에서 확인하지 못한 일반 지식): import.meta.env 타입 선언(env.d.ts)을 함께 고친다는 규칙, 환경변수 읽는 위치를 한곳으로 모은다는 규칙, VITE_ 변수에 비밀 값을 넣지 않는다는 규칙, autoImport 로 생성되는 dts 를 직접 고치지 않는다는 규칙, 개발 중 console 을 커밋하지 않는다는 규칙, 린트로 앱 경계와 상대경로 금지가 강제되는지 확인한다는 규칙, 패키지 설치 시 lock 파일 확인.
 - `cog-vue` 호출 방식: 직접 호출과 description 자동 호출만 쓰고 전역 지침 한 줄은 두지 않는다. Claude 시험(질문당 1회)에서 Vue 요청 4개(파일 위치, 색 클래스, 액션 이름, 빈 화면 원인)는 모두 호출됐고, Vue 와 무관한 요청 3개(파이썬 코드, Django 질문, README 문단)는 호출되지 않았다. 동작 시험은 하지 않았다.
+- `cog-report-writer` 의 범위: 보고서의 목적, 섹션 흐름(요약, 배경, 현재 상황, 본론, 결론, 부록), 리스크와 이슈 기준(기술, 비용, 운영), 일관성과 보안, 디자인(색 체계, 형식별 적용, HTML 기본 CSS)만 담는다. 옛 `my-write-report` 의 4번 문체 규칙은 `slop-rewrite` 의 개조식 보고서 작성 가이드라인(792줄)과 대부분 겹쳐 담지 않고 그쪽에 맡긴다. 같은 규칙이 두 곳에 생겨 어긋나는 것을 막기 위해서다. 옛 스킬의 CSS 는 파일(`references/report-base.css`)로 분리해 그대로 옮겼다.
+- `cog-report-writer` 에 에이전트가 추가한 것: 자료에 없는 사실을 지어내지 않는다는 규칙, 결론을 낼 수 없으면 판단 유보 사유를 첫 부분에 쓴다는 규칙, 서식과 이 스킬과 가이드라인이 어긋날 때의 우선순위, 색만으로 뜻을 전하지 않는다는 규칙, 근거 없는 가정을 리스크 근거로 쓰지 않는다는 규칙, 모바일 확인.
+- `cog-report-writer` 호출 방식: 직접 호출과 description 자동 호출만 쓴다. Claude 시험(질문당 1회)에서 보고서 구성, 방안 검토, 리스크 정리, HTML 디자인 요청 4개는 모두 호출됐다. 보고서 문장 윤문 요청은 호출되지 않고 `slop-rewrite` 가 호출됐다. 파이썬 코드, README, 이메일 요청 3개는 호출되지 않았다. 동작 시험은 하지 않았다.
 
 ## 아직 정하지 않은 것
 
@@ -41,4 +44,5 @@
 - Codex·Antigravity 에서의 스킬 인식, 직접 호출, `description` 호출 시험.
 - `cog-vue` 의 apps/분류/화면 구성과 App*, use* 부품 이름이 사용자의 모든 프론트엔드 프로젝트에 공통인 규칙인지 확인하지 못했다. 프로젝트 하나를 근거로 일반 규칙이라 가정했다. 외부 `nuxt-ui` 스킬은 프로젝트에만 있고 전역에 없어 설치되어 있으면 읽는다는 조건부 문구로 두었다.
 - `cog-vue` 의 화면 패턴 스킬(표, 상세, 헤더, 폼, 토스트와 모달)을 만들지, 어떤 이름으로 만들지 정하지 않았다. 옛 스킬의 data-tables, detail-view, page-header, ux-patterns 는 읽지 않았다(제목 수준 확인 없음).
+- `cog-report-writer` 는 근거 자료(실제 보고서 샘플)가 없어 옛 스킬과 `slop-rewrite` 가이드라인만으로 만들었다. 제안 보고서의 본론 구성은 정하지 않았다. 색 코드와 CSS 는 현재 렌더링으로 다시 확인하지 않았다. 보고서를 실제로 쓰게 하는 동작 시험은 하지 않았다. 이 스킬의 흐름(요약을 맨 위)과 가이드라인의 유형별 순서가 어긋날 때의 우선순위는 에이전트가 정했고 사용자 확인이 필요하다.
 - `cog-vue` 로 코드를 실제로 만드는 과제와 규칙 지킴 여부는 시험하지 못했다. 시험한 것은 호출 여부뿐이다. 환경변수 파일의 틀(.env.example) 규칙은 파일을 읽지 않아 담지 못했다.
