@@ -7,8 +7,10 @@
 ```
 ai-toolkit/
 ├── skills/<스킬 이름>/              스킬 본체. 스킬마다 폴더 하나
-├── ai-agents/<도구>/                도구별 전역 진입 파일 원본
-│   └── skills/<스킬 이름>/SKILL.md
+├── ai-agents/
+│   ├── AGENTS.md                    공통 지침 본체 (모든 도구가 읽는 개인 규칙)
+│   └── <도구>/                      도구별 전역 진입 파일 원본
+│       └── skills/<스킬 이름>/SKILL.md
 ├── AGENTS.md                        이 문서
 └── CLAUDE.md                        Claude 가 이 문서를 읽게 하는 한 줄
 ```
@@ -16,6 +18,7 @@ ai-toolkit/
 - 본체는 `skills/` 에만 둔다. 전역 진입 파일은 본체를 가리키기만 하고 내용을 복제하지 않는다.
 - `ai-agents/<도구>/` 아래는 그 도구의 전역 폴더 구조를 따른다. 예: `ai-agents/claude/skills/` 는 `~/.claude/skills/` 에 대응한다.
 - 최상위 폴더는 `skills/`, `ai-agents/` 로 유지한다. 도구가 늘어도 `ai-agents/` 안에서만 늘린다.
+- 이 문서(루트 `AGENTS.md`)는 이 저장소에서 일하는 방법이고, `ai-agents/AGENTS.md` 는 모든 작업에 적용되는 개인 규칙이다. 두 문서를 섞지 않는다.
 
 ## 2. 건드리면 안 되는 것
 
