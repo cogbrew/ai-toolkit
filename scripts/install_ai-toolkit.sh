@@ -10,7 +10,7 @@ set -u
 
 usage() {
   cat <<'EOF'
-사용법: scripts/install.sh [--apply] [--backup]
+사용법: scripts/install_ai-toolkit.sh [--apply] [--backup]
   (옵션 없음)  계획만 출력한다(dry-run).
   --apply      계획대로 링크를 만든다.
   --backup     충돌한 기존 항목을 ~/.ai-toolkit-backup/<시각>/ 로 옮긴 뒤 연결한다.

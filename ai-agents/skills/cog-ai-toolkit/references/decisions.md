@@ -5,7 +5,7 @@
 - 폴더 이름 `ai-agents/`: 도구별 폴더를 한 곳에 묶기 위해 정했다. `agents/` 는 서브에이전트 폴더와 혼동되고, `global/`·`home/`·`shared/`·`rules/` 는 의미가 맞지 않거나 도구가 쓰는 이름과 겹쳐 제외했다.
 - 스킬은 `ai-agents/skills/` 한 곳에 둔다: 최상위 `skills/` 를 없애고 `ai-agents/` 가 지침과 스킬을 함께 담는다. 세 도구가 같은 `SKILL.md` 형식을 읽으므로 진입 파일을 도구마다 두지 않고 한 벌만 둔다. 한 도구에만 쓰는 스킬은 `ai-agents/<도구>/skills/` 에 둔다.
 - 래퍼 폴더 방식: `slop-rewrite` 스크립트가 자기 위치에서 루트를 계산해 내부 구조를 바꿀 수 없다. 그래서 가져온 프로젝트를 `project/` 에 통째로 담고 진입 파일을 곁에 둔다. 상대경로만 쓰므로 저장소를 옮겨도 동작한다. Claude 에서 인식, 상대경로 따라가기, 스크립트 실행, 목록에 중복 없음을 시험했다.
-- 연결 스크립트(`scripts/install.sh`): 기본은 계획만 출력하고 `--apply` 로 실행한다. 스킬 하나마다 링크하며 도구 폴더 전체는 링크하지 않는다. 이미 있는 항목은 덮어쓰지 않고 `--backup` 일 때만 옮겨 둔다. 삭제 명령은 쓰지 않는다. 별칭 `~/.ai-toolkit`(저장소 위치)도 만든다. 도구별 경로와 예약 이름은 `scripts/targets.conf` 에 둔다.
+- 연결 스크립트(`scripts/install_ai-toolkit.sh`): 기본은 계획만 출력하고 `--apply` 로 실행한다. 스킬 하나마다 링크하며 도구 폴더 전체는 링크하지 않는다. 이미 있는 항목은 덮어쓰지 않고 `--backup` 일 때만 옮겨 둔다. 삭제 명령은 쓰지 않는다. 별칭 `~/.ai-toolkit`(저장소 위치)도 만든다. 도구별 경로와 예약 이름은 `scripts/targets.conf` 에 둔다.
 - 이름 규칙: 직접 만든 스킬만 `cog-` 접두사를 붙이고, 가져온 스킬(`slop-rewrite`, `taste-builder`, `styleguide-builder`)은 이름을 유지한다. 직접 만든 스킬(`cog-code-writer`, `cog-django`, `cog-vue`, `cog-report-writer`)은 작성 기준과 시험을 거쳐 만들었다.
 - 공통 지침은 `ai-agents/AGENTS.md` 한 파일: 도구 전용 줄이 없어 한 파일로 시작했다.
 - 다루는 도구: Claude Code, Codex, Antigravity(앱·CLI). Antigravity IDE 는 쓰지 않는다. Gemini CLI 는 Antigravity CLI 로 대체되어 다루지 않는다.
@@ -35,10 +35,10 @@
 - 안내 문구와 호출 시험은 질문당 1회, Claude 한 모델이다. 읽는 비율이 이 결과보다 낮을 수 있고, Codex·Antigravity 는 시험하지 않았다.
 - 공통 지침 7행 「미정으로 보고 제외」의 의미, 용어 변주(안·계획·설계, 승인·확인), 따옴표·가운뎃점·마침표 통일: 따름 시험에서 실패가 나오지 않아 보류했다.
 - 「스스로 커밋 금지」「비밀 정보 금지」를 hook·권한 설정으로도 강제할지.
-- 공통 지침을 각 도구의 전역 위치에 연결하는 방식은 `install.sh` 의 직접 링크로 구현했다. Codex·Antigravity 에서의 동작은 시험 전이다.
+- 공통 지침을 각 도구의 전역 위치에 연결하는 방식은 `install_ai-toolkit.sh` 의 직접 링크로 구현했다. Codex·Antigravity 에서의 동작은 시험 전이다.
 - Antigravity 의 전역 규칙 파일 이름.
 - `cog-ai-toolkit` 의 자동 호출을 돕는 전역 지침 안내는 두지 않았다. 직접 호출을 자주 잊으면 다시 검토한다. `cog-code-writer` 는 지침 한 줄을 두었다.
-- 직접 만든 스킬 4개(`cog-code-writer`, `cog-django`, `cog-vue`, `cog-report-writer`)는 사용자가 `install.sh --apply` 로 연결해야 쓸 수 있다.
+- 직접 만든 스킬 4개(`cog-code-writer`, `cog-django`, `cog-vue`, `cog-report-writer`)는 사용자가 `install_ai-toolkit.sh --apply` 로 연결해야 쓸 수 있다.
 - `cog-django` 의 앱 구성(apps/분류/화면, app_v1·api_v1)과 core 의 권한 모델(Role, Menu, Feature)이 사용자의 모든 프로젝트에 공통인 규칙인지 확인하지 못했다. 프로젝트 하나(`infra-iscim-app`)를 근거로 일반 규칙이라 가정했다.
 - `.env.example` 의 틀 규칙(구획, 변수 설명 쓰는 법)은 파일을 읽지 않아 담지 못했다. 규칙을 받으면 `cog-django` 의 `settings-env` 에 추가한다.
 - `cog-django` 로 코드를 실제로 만드는 과제(파일 생성, 구조 준수)는 시험하지 못했다. 시험한 것은 구성과 위치를 묻는 질문이다.
