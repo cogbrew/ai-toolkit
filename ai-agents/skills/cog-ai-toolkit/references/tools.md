@@ -12,7 +12,7 @@
 | 도구 | 링크가 걸리는 곳 | 저장소 안 원본 | 상태 |
 |---|---|---|---|
 | Claude | `~/.claude/skills/<스킬>` | `ai-agents/skills/<스킬>/` (전용은 `ai-agents/claude/skills/<스킬>/`) | 확인됨. 래퍼 폴더도 시험으로 인식 확인 |
-| Codex | `~/.agents/skills/<스킬>` | `ai-agents/skills/<스킬>/` (전용은 `ai-agents/codex/skills/<스킬>/`) | 공식 문서 원문으로 확인(링크 폴더 지원 명시). 링크 인식은 시험 전 |
+| Codex | `~/.agents/skills/<스킬>` | `ai-agents/skills/<스킬>/` (전용은 `ai-agents/codex/skills/<스킬>/`) | 공식 문서 원문으로 확인(링크 폴더 지원 명시). 링크로 건 `~/.codex/AGENTS.md` 의 전역 지침 적용을 확인함(커밋 규칙을 묻자 지침대로 답함, 2026-11-11, 1회). `/skills` 에 스킬 7개가 표시됨(6개는 캡처로, `slop-rewrite` 는 사용자가 확인했다고 알려 옴, 2026-11-11, 1회). 호출은 시험 전 |
 | Antigravity (앱·CLI) | `~/.gemini/config/skills/<스킬>` | `ai-agents/skills/<스킬>/` (전용은 `ai-agents/antigravity/skills/<스킬>/`) | 공식 문서로 확인. 링크로 건 스킬 7개가 `agy` 의 `/skills` 에 표시됨(2026-11-11, 사용자 화면으로 1회 확인) |
 
 - 이 표의 경로는 `scripts/targets.conf` 와 같아야 한다. 경로가 바뀌면 둘을 같이 고친다.
