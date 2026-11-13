@@ -15,7 +15,7 @@
 #                         zsh-syntax-highlighting(명령어 실시간 색상)
 #    6. ~/.zshrc       : 새 Mac(Oh My Zsh 기본 파일)이면 정리된 구조로 새로 작성
 #                         이미 직접 정리했거나 다른 설정이 있으면 plugins 줄만 맞춤
-#    7. Ghostty 설정    : Catppuccin Mocha(VS Code 값) / Menlo 12 / Box 커서
+#    7. Ghostty 설정    : Catppuccin Mocha(VS Code 값) / Menlo 12 + 한글 Apple SD Gothic Neo / Box 커서
 #    8. iTerm2 설정     : 같은 값의 프로필 추가 + 기본 프로필로 지정
 #
 #  - 이미 설치된 항목은 건너뜁니다. (여러 번 실행해도 안전)
@@ -28,6 +28,8 @@ set -euo pipefail
 
 FONT_NAME="Menlo"             # Ghostty 용 폰트 이름
 ITERM_FONT="Menlo-Regular"    # iTerm2 용 (PostScript 이름)
+KO_FONT_NAME="Apple SD Gothic Neo"          # Ghostty 용 한글 폰트 이름
+KO_ITERM_FONT="AppleSDGothicNeo-Regular"    # iTerm2 용 한글 폰트 (PostScript 이름)
 FONT_SIZE=12
 PLUGINS="git autojump zsh-autosuggestions zsh-syntax-highlighting"
 
@@ -193,6 +195,7 @@ theme = Catppuccin Mocha
 
 # --- Font ---
 font-family = ${FONT_NAME}
+font-family = "${KO_FONT_NAME}"
 font-size = ${FONT_SIZE}
 # Menlo 를 VS Code / iTerm2 와 비슷한 굵기로 (0~255, 기본 255)
 font-thicken = true
@@ -238,7 +241,7 @@ info "작성: $GHOSTTY_CFG"
 # -----------------------------------------------------------------------------
 # 8. iTerm2 설정 (Dynamic Profile)
 #    Dynamic Profiles 폴더에 JSON 을 두면 iTerm2 가 자동으로 프로필을 읽어 옵니다.
-#    - Font Menlo 12 / Use bold font / Brighten bold text
+#    - Font Menlo 12 / Non-ASCII Font Apple SD Gothic Neo 12 / Use bold font / Brighten bold text
 #    - Thin strokes: Never / Cursor: Box / Minimum contrast: 0
 # -----------------------------------------------------------------------------
 log "8/8 iTerm2 프로필"
@@ -265,6 +268,8 @@ ITERM_TMP="$(mktemp "$ITERM_BASE/catppuccin.XXXXXX")"
   echo "  \"Name\": \"Catppuccin Mocha (VSCode)\","
   echo "  \"Guid\": \"$PROFILE_GUID\","
   echo "  \"Normal Font\": \"${ITERM_FONT} ${FONT_SIZE}\","
+  echo '  "Use Non-ASCII Font": true,'
+  echo "  \"Non Ascii Font\": \"${KO_ITERM_FONT} ${FONT_SIZE}\","
   echo '  "Use Bold Font": true,'
   echo '  "Use Bright Bold": true,'
   echo '  "Thin Strokes": 0,'
