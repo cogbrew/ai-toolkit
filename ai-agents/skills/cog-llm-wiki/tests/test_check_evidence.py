@@ -192,8 +192,8 @@ def make_wiki(root: Path, log: str = ""):
     (root / "01.Raw" / "misc" / "notes.md").write_text(SECOND_RAW)
     (root / "02.Wiki" / "ai-research").mkdir(parents=True)
     (root / "02.Wiki" / "ai-research" / "ghostty.md").write_text(ARTICLE_CONTENT)
-    (root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-    (root / "02.Wiki" / "log.md").write_text(log or "# Wiki Log\n")
+    (root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+    (root / "02.Wiki" / "LOGS.md").write_text(log or "# Wiki Log\n")
 
 
 def run_checker(root: Path, *args: str, cwd: str | None = None) -> subprocess.CompletedProcess:
@@ -247,8 +247,8 @@ class BoundaryMatchingTest(WikiTestCase):
         (self.root / "01.Raw" / "t" / "numbers.md").write_text(BOUNDARY_RAW)
         (self.root / "02.Wiki" / "t").mkdir(parents=True)
         (self.root / "02.Wiki" / "t" / "a.md").write_text(BOUNDARY_ARTICLE)
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text("# Wiki Log\n")
 
     def test_substring_of_larger_number_does_not_pass(self):
         result = run_checker(self.root)
@@ -289,8 +289,8 @@ class NumberCoverageTest(WikiTestCase):
         (self.root / "01.Raw" / "t" / "plain.md").write_text(PLAIN_RAW)
         (self.root / "02.Wiki" / "t").mkdir(parents=True)
         (self.root / "02.Wiki" / "t" / "a.md").write_text(PLAIN_ARTICLE)
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text("# Wiki Log\n")
 
     def test_flags_decimals_and_long_numbers(self):
         result = run_checker(self.root)
@@ -360,8 +360,8 @@ def plain_wiki(root: Path, article_name: str, article: str, raw: str = PLAIN_RAW
     (root / "01.Raw" / "t" / raw_name).write_text(raw)
     (root / "02.Wiki" / "t").mkdir(parents=True)
     (root / "02.Wiki" / "t" / article_name).write_text(article)
-    (root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-    (root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
+    (root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+    (root / "02.Wiki" / "LOGS.md").write_text("# Wiki Log\n")
 
 
 class SentenceFinalTest(WikiTestCase):
@@ -410,8 +410,8 @@ class RawEscapeTest(WikiTestCase):
         (self.root / "notes" / "support.md").write_text("The release reached 654K users.\n")
         (self.root / "02.Wiki" / "t").mkdir(parents=True)
         (self.root / "02.Wiki" / "t" / "a.md").write_text(ESCAPE_ARTICLE)
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text("# Wiki Log\n")
         result = run_checker(self.root)
         self.assertIn("escapes 01.Raw/", result.stdout)
 
@@ -421,8 +421,8 @@ class NoMaterialParsingTest(WikiTestCase):
         (self.root / "01.Raw" / "t").mkdir(parents=True)
         (self.root / "01.Raw" / "t" / "orphan.md").write_text("# Orphan\n")
         (self.root / "02.Wiki").mkdir()
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text(
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text(
             "# Wiki Log\n\n```markdown\n"
             "## [2026-01-01] ingest | no material: 01.Raw/t/orphan.md\n"
             "- Disposition: No material\n```\n"
@@ -434,8 +434,8 @@ class NoMaterialParsingTest(WikiTestCase):
         (self.root / "01.Raw" / "t").mkdir(parents=True)
         (self.root / "01.Raw" / "t" / "orphan.md").write_text("# Orphan\n")
         (self.root / "02.Wiki").mkdir()
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text(
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text(
             "# Wiki Log\n\n"
             "## [2026-01-01] lint | 1 issues found, 0 auto-fixed\n"
             "- Note: investigate no material: 01.Raw/t/orphan.md\n"
@@ -455,7 +455,7 @@ class DedupTest(WikiTestCase):
 class ExplicitArgsTest(WikiTestCase):
     def test_index_and_log_are_skipped_even_when_passed_explicitly(self):
         make_wiki(self.root)
-        result = run_checker(self.root, "02.Wiki/log.md")
+        result = run_checker(self.root, "02.Wiki/LOGS.md")
         self.assertNotIn("no Raw field", result.stdout)
 
 
@@ -591,13 +591,13 @@ class QuotePairingTest(WikiTestCase):
 class NestedIndexLogTest(WikiTestCase):
     def test_article_named_index_in_topic_dir_is_checked(self):
         article = BODY_METADATA_ARTICLE.replace("999K users", "888K users")
-        plain_wiki(self.root, "index.md", article)
+        plain_wiki(self.root, "INDEX.md", article)
         result = run_checker(self.root)
         self.assertIn("888K", result.stdout)
 
     def test_article_named_log_in_topic_dir_is_checked(self):
         article = BODY_METADATA_ARTICLE.replace("999K users", "888K users")
-        plain_wiki(self.root, "log.md", article)
+        plain_wiki(self.root, "LOGS.md", article)
         result = run_checker(self.root)
         self.assertIn("888K", result.stdout)
 
@@ -724,8 +724,8 @@ class ExamplesSmokeTest(WikiTestCase):
         (self.root / "01.Raw" / "ai-coding-tools" / raw_src.name).write_text(raw_src.read_text())
         (self.root / "02.Wiki" / "ai-coding-tools").mkdir(parents=True)
         (self.root / "02.Wiki" / "ai-coding-tools" / article_src.name).write_text(article_src.read_text())
-        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "02.Wiki" / "INDEX.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "LOGS.md").write_text("# Wiki Log\n")
         result = run_checker(self.root)
         self.assertIn("0 fidelity suspect(s)", result.stdout)
         self.assertIn("0 evidence error(s)", result.stdout)

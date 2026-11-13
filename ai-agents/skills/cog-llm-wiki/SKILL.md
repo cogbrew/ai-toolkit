@@ -18,8 +18,8 @@ Three layers, all under the user's project root:
 **01.Raw/** — Immutable source material. You read, never modify. Organized by topic subdirectories (e.g., `01.Raw/machine-learning/`).
 
 **02.Wiki/** — Compiled knowledge articles. You have full ownership. Organized by topic subdirectories, one level only: `02.Wiki/<topic>/<article>.md`. Contains two special files:
-- `02.Wiki/index.md` — Global index. One row per article, grouped by topic, with link + summary + Updated date.
-- `02.Wiki/log.md` — Append-only operation log.
+- `02.Wiki/INDEX.md` — Global index. One row per article, grouped by topic, with link + summary + Updated date.
+- `02.Wiki/LOGS.md` — Append-only operation log.
 
 **SKILL.md** (this file) — Schema layer. Defines structure and workflow rules.
 
@@ -33,8 +33,8 @@ Triggers only on the first Ingest. First confirm the current directory is the wi
 
 - `01.Raw/` directory (with `.gitkeep`)
 - `02.Wiki/` directory (with `.gitkeep`)
-- `02.Wiki/index.md` — heading `# Knowledge Base Index`, empty body
-- `02.Wiki/log.md` — heading `# Wiki Log`, empty body
+- `02.Wiki/INDEX.md` — heading `# Knowledge Base Index`, empty body
+- `02.Wiki/LOGS.md` — heading `# Wiki Log`, empty body
 
 If Query or Lint cannot find the wiki structure, tell the user: "Run an ingest first to initialize the wiki." Do not auto-create.
 
@@ -102,9 +102,9 @@ Archive pages are never cascade-updated (they are point-in-time snapshots).
 
 ### Post-Ingest
 
-Update `02.Wiki/index.md`: add or update entries for every touched article. When adding a new topic section, include a one-line description. The Updated date reflects when the article's knowledge content last changed, not the file system timestamp. See `references/index-template.md` for format.
+Update `02.Wiki/INDEX.md`: add or update entries for every touched article. When adding a new topic section, include a one-line description. The Updated date reflects when the article's knowledge content last changed, not the file system timestamp. See `references/index-template.md` for format.
 
-Append to `02.Wiki/log.md`:
+Append to `02.Wiki/LOGS.md`:
 
 ```
 ## [YYYY-MM-DD] ingest | <primary article title>
@@ -128,7 +128,7 @@ Use only when the user explicitly asks to research a topic or gather sources int
 
 1. Split the topic into a few angles. For each, search with a wide net — official names, abbreviations, and synonyms, not just the literal keywords.
 2. For any core claim you expect to conclude, deliberately search the opposing side: failures, criticism, failed replications.
-3. Save selected sources to 01.Raw/ as usual. Searching may run in parallel; compilation must not — compile one source at a time, because index.md, log.md, and cascade updates are shared state.
+3. Save selected sources to 01.Raw/ as usual. Searching may run in parallel; compilation must not — compile one source at a time, because INDEX.md, LOGS.md, and cascade updates are shared state.
 
 ---
 
@@ -141,7 +141,7 @@ Search the wiki and answer questions. Examples of triggers:
 
 ### Steps
 
-1. Read `02.Wiki/index.md` to locate candidate articles, then full-text search 02.Wiki/ with the topic's key terms *and their synonyms*. Never claim the wiki has no relevant content until both the index and the full-text search come back empty — and say that you searched.
+1. Read `02.Wiki/INDEX.md` to locate candidate articles, then full-text search 02.Wiki/ with the topic's key terms *and their synonyms*. Never claim the wiki has no relevant content until both the index and the full-text search come back empty — and say that you searched.
 2. Read the articles you found and synthesize an answer.
 3. Prefer wiki content over your own training knowledge. Cite sources with markdown links: `[Article Title](02.Wiki/topic/article.md)` (project-root-relative paths for in-conversation citations; within 02.Wiki/ files, use paths relative to the current file).
 4. Output the answer in the conversation. Do not write files unless asked.
@@ -156,8 +156,8 @@ When the user explicitly asks to archive or save the answer to the wiki:
    - File name reflects the query topic, e.g., `transformer-architectures-overview.md`.
    - Place in the most relevant topic directory.
 2. Always create a new page. Never merge into existing articles (archive content is a synthesized answer, not raw material).
-3. Update `02.Wiki/index.md`. Prefix the Summary with `[Archived]`.
-4. Append to `02.Wiki/log.md`:
+3. Update `02.Wiki/INDEX.md`. Prefix the Summary with `[Archived]`.
+4. Append to `02.Wiki/LOGS.md`:
    ```
    ## [YYYY-MM-DD] query | Archived: <page title>
    ```
@@ -172,12 +172,12 @@ Quality checks on the wiki. Three categories with different authority levels.
 
 Fix these automatically:
 
-**Index consistency** — compare `02.Wiki/index.md` against actual 02.Wiki/ files (excluding index.md and log.md):
+**Index consistency** — compare `02.Wiki/INDEX.md` against actual 02.Wiki/ files (excluding INDEX.md and LOGS.md):
 - File exists but missing from index → add entry with `(no summary)` placeholder. For Updated, use the article's metadata Updated date if present (for archive pages, the Archived date); otherwise fall back to file's last modified date.
 - Index entry points to nonexistent file → mark as `[MISSING]` in the index. Do not delete the entry; let the user decide.
 - Index entry's Updated differs from the article's metadata Updated (or Archived, for archive pages) → update the index entry to match the article.
 
-**Internal links** — for every markdown link in 02.Wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below), excluding See Also section links (handled by the See Also rule below), and excluding index.md/log.md (handled above):
+**Internal links** — for every markdown link in 02.Wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below), excluding See Also section links (handled by the See Also rule below), and excluding INDEX.md/LOGS.md (handled above):
 - Target does not exist → search 02.Wiki/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero or multiple matches → report to the user.
@@ -219,7 +219,7 @@ These rely on your judgment. Report findings without auto-fixing:
 
 ### Post-Lint
 
-Append to `02.Wiki/log.md`:
+Append to `02.Wiki/LOGS.md`:
 
 ```
 ## [YYYY-MM-DD] lint | <N> issues found, <M> auto-fixed
@@ -233,4 +233,4 @@ Append to `02.Wiki/log.md`:
 - 02.Wiki/ supports one level of topic subdirectories only. No deeper nesting.
 - Today's date for log entries, Collected dates, and Archived dates. Updated dates reflect when the article's knowledge content last changed. Published dates come from the source (use `Unknown` when unavailable).
 - Inside 02.Wiki/ files, all markdown links use paths relative to the current file. In conversation output, use project-root-relative paths (e.g., `02.Wiki/topic/article.md`).
-- Ingest updates both `02.Wiki/index.md` and `02.Wiki/log.md` (a No material ingest updates only the log). Archive (from Query) updates both. Lint updates `02.Wiki/log.md` (and `02.Wiki/index.md` only when auto-fixing index entries). Plain queries do not write any files.
+- Ingest updates both `02.Wiki/INDEX.md` and `02.Wiki/LOGS.md` (a No material ingest updates only the log). Archive (from Query) updates both. Lint updates `02.Wiki/LOGS.md` (and `02.Wiki/INDEX.md` only when auto-fixing index entries). Plain queries do not write any files.

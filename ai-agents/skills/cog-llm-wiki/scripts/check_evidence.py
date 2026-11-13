@@ -29,7 +29,7 @@ The exit code carries no information; the report is the interface.
 
 Usage: check_evidence.py [project-root] [article.md ...]
 Defaults: project-root is the current directory; all 02.Wiki/**/*.md
-articles except index.md and log.md are checked. Article paths may be
+articles except INDEX.md and LOGS.md are checked. Article paths may be
 absolute or relative to the project root.
 """
 
@@ -58,7 +58,7 @@ FENCE_OPEN_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 FENCE_CLOSE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})[ \t]*$")
 WS_RE = re.compile(r"\s+")
 
-SKIP_FILES = {"index.md", "log.md"}
+SKIP_FILES = {"INDEX.md", "LOGS.md"}
 
 
 @dataclass(frozen=True)
@@ -347,7 +347,7 @@ def unreferenced_raws(root: Path) -> list[str]:
     if not raw_dir.is_dir():
         return []
     referenced = referenced_raws(root)
-    disposed = no_material_paths(root / "02.Wiki" / "log.md")
+    disposed = no_material_paths(root / "02.Wiki" / "LOGS.md")
     missing = []
     for path in sorted(raw_dir.rglob("*.md")):
         if path.resolve() not in referenced and path.relative_to(root).as_posix() not in disposed:
