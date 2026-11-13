@@ -85,6 +85,7 @@ These are not mutually exclusive. A single source may warrant merging into one a
 **Source fidelity.** Every number, date, and direct quote must be located in the raw file (grep or read) *before* it is written; write the value exactly as found — if the source says 42K, write 42K, not 42,000. Derived values (sums, deltas, counts you computed) must show their components so each component is findable in raw. If you cannot locate a value, do not write its exact form; drop it or state it without precision.
 
 See `references/article-template.md` for article format. Key points:
+- Metadata lines (Sources, Raw, Updated, Archived) are blockquote lines exactly as in the template (`> Raw: ...`), never list items (`- Raw: ...`). `scripts/check_evidence.py` recognizes only the blockquote form, so a list-item Raw field makes lint report the article as having no Raw field. Follow the template, not the format of existing articles.
 - Sources field: author, organization, or publication name + date, semicolon-separated.
 - Raw field: markdown links to raw/ files, semicolon-separated.
 - Relative paths from `wiki/<topic>/` use `../../raw/<topic>/<file>.md` (two levels up to project root).
