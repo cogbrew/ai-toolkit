@@ -11,7 +11,7 @@ Report-only; never modifies files. Three sweeps:
    judging them is the reader's job, not this script's.
 2. Evidence errors — articles that cannot be verified at all: a missing
    Raw field on a non-archive article, Raw links that do not resolve,
-   or Raw links that escape raw/ (evidence must live in immutable raw/).
+   or Raw links that escape 01.Raw/ (evidence must live in immutable 01.Raw/).
 3. Inventory — raw files that no article's Raw field references,
    excluding files whose ingest was logged as "no material".
 
@@ -28,7 +28,7 @@ forms extend this list in the docstring, not the regexes.
 The exit code carries no information; the report is the interface.
 
 Usage: check_evidence.py [project-root] [article.md ...]
-Defaults: project-root is the current directory; all wiki/**/*.md
+Defaults: project-root is the current directory; all 02.Wiki/**/*.md
 articles except index.md and log.md are checked. Article paths may be
 absolute or relative to the project root.
 """
@@ -295,13 +295,13 @@ def check_article(article: Path, root: Path) -> tuple[list[str], list[str]]:
         if any(ARCHIVED_RE.match(line.strip()) for line in parse_document(text).header):
             return [], []
         return [], ["article has no Raw field"]
-    raw_root = (root / "raw").resolve()
+    raw_root = (root / "01.Raw").resolve()
     raws = []
     errors = []
     for link in links:
         target = (article.parent / link).resolve()
         if not target.is_relative_to(raw_root):
-            errors.append(f"Raw link escapes raw/: {link}")
+            errors.append(f"Raw link escapes 01.Raw/: {link}")
         elif not target.is_file():
             errors.append(f"unresolvable Raw link: {link}")
         else:
@@ -335,7 +335,7 @@ def no_material_paths(log_file: Path) -> set[str]:
 
 def referenced_raws(root: Path) -> set[Path]:
     referenced = set()
-    for article in iter_articles(root / "wiki"):
+    for article in iter_articles(root / "02.Wiki"):
         for link in raw_links_of(article.read_text(encoding="utf-8")):
             target = (article.parent / link).resolve()
             referenced.add(target)
@@ -343,11 +343,11 @@ def referenced_raws(root: Path) -> set[Path]:
 
 
 def unreferenced_raws(root: Path) -> list[str]:
-    raw_dir = root / "raw"
+    raw_dir = root / "01.Raw"
     if not raw_dir.is_dir():
         return []
     referenced = referenced_raws(root)
-    disposed = no_material_paths(root / "wiki" / "log.md")
+    disposed = no_material_paths(root / "02.Wiki" / "log.md")
     missing = []
     for path in sorted(raw_dir.rglob("*.md")):
         if path.resolve() not in referenced and path.relative_to(root).as_posix() not in disposed:
@@ -357,9 +357,9 @@ def unreferenced_raws(root: Path) -> list[str]:
 
 def main(argv: list[str]) -> int:
     root = Path(argv[1]).resolve() if len(argv) > 1 else Path.cwd()
-    wiki_dir = root / "wiki"
+    wiki_dir = root / "02.Wiki"
     if not wiki_dir.is_dir():
-        print(f"no wiki/ directory under {root}")
+        print(f"no 02.Wiki/ directory under {root}")
         return 1
 
     articles = []

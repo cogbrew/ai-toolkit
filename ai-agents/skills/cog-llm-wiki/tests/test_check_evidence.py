@@ -20,7 +20,7 @@ Daily active users reached 10,000 by March.
 ARTICLE_CONTENT = """# Ghostty
 
 > Sources: Example, 2026-04-16
-> Raw: [ghostty](../../raw/ai-research/2026-04-17-ghostty.md)
+> Raw: [ghostty](../../01.Raw/ai-research/2026-04-17-ghostty.md)
 
 ## Overview
 
@@ -52,7 +52,7 @@ Revenue hit 42K. Uptime was 99.9%. The round closed on 2026-06-15.
 SENTENCE_FINAL_ARTICLE = """# Sentence final
 
 > Sources: Example, 2026-06-01
-> Raw: [numbers](../../raw/t/numbers.md)
+> Raw: [numbers](../../01.Raw/t/numbers.md)
 
 Revenue hit 42K and uptime was 99.9%. The round closed on 2026-06-15.
 """
@@ -60,7 +60,7 @@ Revenue hit 42K and uptime was 99.9%. The round closed on 2026-06-15.
 STATUS_EXPLANATION_ARTICLE = """# Status article
 
 > Sources: Example, 2026-04-16
-> Raw: [ghostty](../../raw/ai-research/2026-04-17-ghostty.md)
+> Raw: [ghostty](../../01.Raw/ai-research/2026-04-17-ghostty.md)
 
 Ghostty has 42K stars.
 
@@ -71,7 +71,7 @@ Ghostty has 42K stars.
 FENCE_VARIANTS_ARTICLE = """# Fences
 
 > Sources: Example, 2026-04-16
-> Raw: [ghostty](../../raw/ai-research/2026-04-17-ghostty.md)
+> Raw: [ghostty](../../01.Raw/ai-research/2026-04-17-ghostty.md)
 
 ~~~text
 not a factual claim: 777K
@@ -106,7 +106,7 @@ First paragraph.
 BODY_METADATA_ARTICLE = """# Body metadata
 
 > Sources: Example, 2026-06-01
-> Raw: [src](../../raw/t/src.md)
+> Raw: [src](../../01.Raw/t/src.md)
 
 The release reached 999K users.
 """
@@ -122,7 +122,7 @@ The release reached 654K users.
 DEDUP_ARTICLE = """# Dedup
 
 > Sources: Example, 2026-04-16
-> Raw: [ghostty](../../raw/ai-research/2026-04-17-ghostty.md)
+> Raw: [ghostty](../../01.Raw/ai-research/2026-04-17-ghostty.md)
 
 Missing value 88,123 appears here and again as 88,123 elsewhere.
 """
@@ -139,7 +139,7 @@ Ghostty reached 142K stars. Uptime was 95.5%. Forks: 13,020.
 BOUNDARY_ARTICLE = """# Boundary
 
 > Sources: Example, 2026-06-01
-> Raw: [numbers](../../raw/t/numbers.md)
+> Raw: [numbers](../../01.Raw/t/numbers.md)
 
 Ghostty has 42K stars and uptime of 5.5%. Forks grew to 3,020.
 """
@@ -156,7 +156,7 @@ No numeric facts here at all.
 PLAIN_ARTICLE = """# Plain numbers
 
 > Sources: Example, 2026-06-01
-> Raw: [plain](../../raw/t/plain.md)
+> Raw: [plain](../../01.Raw/t/plain.md)
 
 There were 42 users; the ratio was 3.14; founded in 2026.
 """
@@ -179,21 +179,21 @@ This ordinary article forgot its Raw field and claims 999K users.
 BROKEN_RAW_ARTICLE = """# Broken
 
 > Sources: Example, 2026-06-01
-> Raw: [gone](../../raw/t/nonexistent.md)
+> Raw: [gone](../../01.Raw/t/nonexistent.md)
 
 Claims 999K users with no evidence anywhere.
 """
 
 
 def make_wiki(root: Path, log: str = ""):
-    (root / "raw" / "ai-research").mkdir(parents=True)
-    (root / "raw" / "ai-research" / "2026-04-17-ghostty.md").write_text(RAW_CONTENT)
-    (root / "raw" / "misc").mkdir(parents=True)
-    (root / "raw" / "misc" / "notes.md").write_text(SECOND_RAW)
-    (root / "wiki" / "ai-research").mkdir(parents=True)
-    (root / "wiki" / "ai-research" / "ghostty.md").write_text(ARTICLE_CONTENT)
-    (root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-    (root / "wiki" / "log.md").write_text(log or "# Wiki Log\n")
+    (root / "01.Raw" / "ai-research").mkdir(parents=True)
+    (root / "01.Raw" / "ai-research" / "2026-04-17-ghostty.md").write_text(RAW_CONTENT)
+    (root / "01.Raw" / "misc").mkdir(parents=True)
+    (root / "01.Raw" / "misc" / "notes.md").write_text(SECOND_RAW)
+    (root / "02.Wiki" / "ai-research").mkdir(parents=True)
+    (root / "02.Wiki" / "ai-research" / "ghostty.md").write_text(ARTICLE_CONTENT)
+    (root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+    (root / "02.Wiki" / "log.md").write_text(log or "# Wiki Log\n")
 
 
 def run_checker(root: Path, *args: str, cwd: str | None = None) -> subprocess.CompletedProcess:
@@ -243,12 +243,12 @@ class FidelityCheckTest(WikiTestCase):
 class BoundaryMatchingTest(WikiTestCase):
     def setUp(self):
         super().setUp()
-        (self.root / "raw" / "t").mkdir(parents=True)
-        (self.root / "raw" / "t" / "numbers.md").write_text(BOUNDARY_RAW)
-        (self.root / "wiki" / "t").mkdir(parents=True)
-        (self.root / "wiki" / "t" / "a.md").write_text(BOUNDARY_ARTICLE)
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "01.Raw" / "t").mkdir(parents=True)
+        (self.root / "01.Raw" / "t" / "numbers.md").write_text(BOUNDARY_RAW)
+        (self.root / "02.Wiki" / "t").mkdir(parents=True)
+        (self.root / "02.Wiki" / "t" / "a.md").write_text(BOUNDARY_ARTICLE)
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
 
     def test_substring_of_larger_number_does_not_pass(self):
         result = run_checker(self.root)
@@ -285,12 +285,12 @@ class DateBoundaryTest(WikiTestCase):
 class NumberCoverageTest(WikiTestCase):
     def setUp(self):
         super().setUp()
-        (self.root / "raw" / "t").mkdir(parents=True)
-        (self.root / "raw" / "t" / "plain.md").write_text(PLAIN_RAW)
-        (self.root / "wiki" / "t").mkdir(parents=True)
-        (self.root / "wiki" / "t" / "a.md").write_text(PLAIN_ARTICLE)
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "01.Raw" / "t").mkdir(parents=True)
+        (self.root / "01.Raw" / "t" / "plain.md").write_text(PLAIN_RAW)
+        (self.root / "02.Wiki" / "t").mkdir(parents=True)
+        (self.root / "02.Wiki" / "t" / "a.md").write_text(PLAIN_ARTICLE)
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
 
     def test_flags_decimals_and_long_numbers(self):
         result = run_checker(self.root)
@@ -310,19 +310,19 @@ class EvidenceErrorTest(WikiTestCase):
         make_wiki(self.root)
 
     def test_archive_page_without_raw_is_legitimate(self):
-        (self.root / "wiki" / "ai-research" / "old-answer.md").write_text(ARCHIVE_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "old-answer.md").write_text(ARCHIVE_ARTICLE)
         result = run_checker(self.root)
         self.assertNotIn("999K", result.stdout)
         self.assertNotIn("old-answer", result.stdout)
 
     def test_ordinary_article_without_raw_is_an_evidence_error(self):
-        (self.root / "wiki" / "ai-research" / "no-raw.md").write_text(NO_RAW_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "no-raw.md").write_text(NO_RAW_ARTICLE)
         result = run_checker(self.root)
         self.assertIn("no-raw", result.stdout)
         self.assertIn("no Raw field", result.stdout)
 
     def test_broken_raw_link_is_an_evidence_error(self):
-        (self.root / "wiki" / "ai-research" / "broken.md").write_text(BROKEN_RAW_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "broken.md").write_text(BROKEN_RAW_ARTICLE)
         result = run_checker(self.root)
         self.assertIn("broken", result.stdout)
         self.assertIn("unresolvable Raw link", result.stdout)
@@ -334,14 +334,14 @@ class CliTest(WikiTestCase):
         make_wiki(self.root)
 
     def test_article_args_resolve_against_root_not_cwd(self):
-        result = run_checker(self.root, "wiki/ai-research/ghostty.md", cwd="/")
+        result = run_checker(self.root, "02.Wiki/ai-research/ghostty.md", cwd="/")
         self.assertEqual(result.returncode, 0)
         self.assertIn("3,020", result.stdout)
 
     def test_missing_article_is_a_warning_not_a_traceback(self):
-        result = run_checker(self.root, "wiki/nope.md")
+        result = run_checker(self.root, "02.Wiki/nope.md")
         self.assertEqual(result.returncode, 0)
-        self.assertIn("wiki/nope.md", result.stderr)
+        self.assertIn("02.Wiki/nope.md", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
 
@@ -356,19 +356,19 @@ Nothing here is compiled anywhere.
 
 
 def plain_wiki(root: Path, article_name: str, article: str, raw: str = PLAIN_RAW, raw_name: str = "src.md"):
-    (root / "raw" / "t").mkdir(parents=True)
-    (root / "raw" / "t" / raw_name).write_text(raw)
-    (root / "wiki" / "t").mkdir(parents=True)
-    (root / "wiki" / "t" / article_name).write_text(article)
-    (root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-    (root / "wiki" / "log.md").write_text("# Wiki Log\n")
+    (root / "01.Raw" / "t").mkdir(parents=True)
+    (root / "01.Raw" / "t" / raw_name).write_text(raw)
+    (root / "02.Wiki" / "t").mkdir(parents=True)
+    (root / "02.Wiki" / "t" / article_name).write_text(article)
+    (root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+    (root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
 
 
 class SentenceFinalTest(WikiTestCase):
     def test_sentence_final_values_pass(self):
         plain_wiki(self.root, "a.md", SENTENCE_FINAL_ARTICLE, raw=SENTENCE_FINAL_RAW)
-        (self.root / "raw" / "t" / "src.md").unlink()
-        (self.root / "raw" / "t" / "numbers.md").write_text(SENTENCE_FINAL_RAW)
+        (self.root / "01.Raw" / "t" / "src.md").unlink()
+        (self.root / "01.Raw" / "t" / "numbers.md").write_text(SENTENCE_FINAL_RAW)
         result = run_checker(self.root)
         self.assertIn("0 fidelity suspect(s)", result.stdout)
 
@@ -376,7 +376,7 @@ class SentenceFinalTest(WikiTestCase):
 class StatusBlockTest(WikiTestCase):
     def test_status_block_explanation_is_not_checked(self):
         make_wiki(self.root)
-        (self.root / "wiki" / "ai-research" / "statused.md").write_text(STATUS_EXPLANATION_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "statused.md").write_text(STATUS_EXPLANATION_ARTICLE)
         result = run_checker(self.root)
         self.assertNotIn("2026-07-18", result.stdout)
         self.assertNotIn("55K", result.stdout)
@@ -385,7 +385,7 @@ class StatusBlockTest(WikiTestCase):
 class FenceVariantsTest(WikiTestCase):
     def test_tilde_and_long_backtick_fences_are_stripped(self):
         make_wiki(self.root)
-        (self.root / "wiki" / "ai-research" / "fences.md").write_text(FENCE_VARIANTS_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "fences.md").write_text(FENCE_VARIANTS_ARTICLE)
         result = run_checker(self.root)
         self.assertNotIn("777K", result.stdout)
         self.assertNotIn("888K", result.stdout)
@@ -405,49 +405,49 @@ class HeaderScopeTest(WikiTestCase):
 
 class RawEscapeTest(WikiTestCase):
     def test_raw_link_outside_raw_dir_is_an_evidence_error(self):
-        (self.root / "raw").mkdir()
+        (self.root / "01.Raw").mkdir()
         (self.root / "notes").mkdir()
         (self.root / "notes" / "support.md").write_text("The release reached 654K users.\n")
-        (self.root / "wiki" / "t").mkdir(parents=True)
-        (self.root / "wiki" / "t" / "a.md").write_text(ESCAPE_ARTICLE)
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "02.Wiki" / "t").mkdir(parents=True)
+        (self.root / "02.Wiki" / "t" / "a.md").write_text(ESCAPE_ARTICLE)
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
         result = run_checker(self.root)
-        self.assertIn("escapes raw/", result.stdout)
+        self.assertIn("escapes 01.Raw/", result.stdout)
 
 
 class NoMaterialParsingTest(WikiTestCase):
     def test_heading_inside_fence_does_not_suppress(self):
-        (self.root / "raw" / "t").mkdir(parents=True)
-        (self.root / "raw" / "t" / "orphan.md").write_text("# Orphan\n")
-        (self.root / "wiki").mkdir()
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text(
+        (self.root / "01.Raw" / "t").mkdir(parents=True)
+        (self.root / "01.Raw" / "t" / "orphan.md").write_text("# Orphan\n")
+        (self.root / "02.Wiki").mkdir()
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text(
             "# Wiki Log\n\n```markdown\n"
-            "## [2026-01-01] ingest | no material: raw/t/orphan.md\n"
+            "## [2026-01-01] ingest | no material: 01.Raw/t/orphan.md\n"
             "- Disposition: No material\n```\n"
         )
         result = run_checker(self.root)
-        self.assertIn("raw/t/orphan.md", result.stdout)
+        self.assertIn("01.Raw/t/orphan.md", result.stdout)
 
     def test_prose_mention_in_lint_entry_does_not_suppress(self):
-        (self.root / "raw" / "t").mkdir(parents=True)
-        (self.root / "raw" / "t" / "orphan.md").write_text("# Orphan\n")
-        (self.root / "wiki").mkdir()
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text(
+        (self.root / "01.Raw" / "t").mkdir(parents=True)
+        (self.root / "01.Raw" / "t" / "orphan.md").write_text("# Orphan\n")
+        (self.root / "02.Wiki").mkdir()
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text(
             "# Wiki Log\n\n"
             "## [2026-01-01] lint | 1 issues found, 0 auto-fixed\n"
-            "- Note: investigate no material: raw/t/orphan.md\n"
+            "- Note: investigate no material: 01.Raw/t/orphan.md\n"
         )
         result = run_checker(self.root)
-        self.assertIn("raw/t/orphan.md", result.stdout)
+        self.assertIn("01.Raw/t/orphan.md", result.stdout)
 
 
 class DedupTest(WikiTestCase):
     def test_candidate_reported_once_without_trailing_space(self):
         make_wiki(self.root)
-        (self.root / "wiki" / "ai-research" / "dedup.md").write_text(DEDUP_ARTICLE)
+        (self.root / "02.Wiki" / "ai-research" / "dedup.md").write_text(DEDUP_ARTICLE)
         result = run_checker(self.root)
         self.assertEqual(result.stdout.count("- 88,123"), 1)
 
@@ -455,7 +455,7 @@ class DedupTest(WikiTestCase):
 class ExplicitArgsTest(WikiTestCase):
     def test_index_and_log_are_skipped_even_when_passed_explicitly(self):
         make_wiki(self.root)
-        result = run_checker(self.root, "wiki/log.md")
+        result = run_checker(self.root, "02.Wiki/log.md")
         self.assertNotIn("no Raw field", result.stdout)
 
 
@@ -493,8 +493,8 @@ class TokenizerClosedFormTest(WikiTestCase):
 class RawLinksHeaderScopeTest(WikiTestCase):
     def test_fence_template_raw_line_is_ignored(self):
         article = (
-            "# A\n\n> Sources: Example, 2026-01-01\n> Raw: [src](../../raw/t/src.md)\n\n"
-            "Value 42K.\n\n```markdown\n> Raw: [template](../../raw/topic/filename.md)\n```\n"
+            "# A\n\n> Sources: Example, 2026-01-01\n> Raw: [src](../../01.Raw/t/src.md)\n\n"
+            "Value 42K.\n\n```markdown\n> Raw: [template](../../01.Raw/topic/filename.md)\n```\n"
         )
         raw = PLAIN_RAW.replace("No numeric facts here at all.", "Value 42K confirmed.")
         plain_wiki(self.root, "a.md", article, raw=raw)
@@ -504,7 +504,7 @@ class RawLinksHeaderScopeTest(WikiTestCase):
     def test_body_raw_line_does_not_count(self):
         article = (
             "# A\n\n> Sources: Example, 2026-01-01\n\n"
-            "Claims 42% growth.\n\n> Raw: [src](../../raw/t/src.md)\n"
+            "Claims 42% growth.\n\n> Raw: [src](../../01.Raw/t/src.md)\n"
         )
         raw = PLAIN_RAW.replace("No numeric facts here at all.", "42% growth confirmed.")
         plain_wiki(self.root, "a.md", article, raw=raw)
@@ -516,7 +516,7 @@ class DocumentStructureTest(WikiTestCase):
     def test_fence_between_h1_and_body_raw_does_not_create_header(self):
         article = (
             "# A\n\n```text\nthis is body content\n```\n\n"
-            "> Raw: [src](../../raw/t/src.md)\n\nValue 42K.\n"
+            "> Raw: [src](../../01.Raw/t/src.md)\n\nValue 42K.\n"
         )
         raw = PLAIN_RAW.replace("No numeric facts here at all.", "Value 42K.")
         plain_wiki(self.root, "a.md", article, raw=raw)
@@ -536,7 +536,7 @@ class DocumentStructureTest(WikiTestCase):
         article = (
             "# GPT 9.7 Migration Notes\n\n"
             "> Sources: Example, 2026-01-01\n"
-            "> Raw: [src](../../raw/t/src.md)\n\nNo other claim.\n"
+            "> Raw: [src](../../01.Raw/t/src.md)\n\nNo other claim.\n"
         )
         plain_wiki(self.root, "a.md", article)
         result = run_checker(self.root)
@@ -545,7 +545,7 @@ class DocumentStructureTest(WikiTestCase):
     def test_fence_closer_with_trailing_text_does_not_close(self):
         article = (
             "# A\n\n> Sources: Example, 2026-01-01\n"
-            "> Raw: [src](../../raw/t/src.md)\n\n"
+            "> Raw: [src](../../01.Raw/t/src.md)\n\n"
             "```text\ninside 777K\n``` trailing text\nstill inside 888K\n```\n"
         )
         plain_wiki(self.root, "a.md", article)
@@ -556,7 +556,7 @@ class DocumentStructureTest(WikiTestCase):
     def test_backtick_in_info_string_does_not_open_fence(self):
         article = (
             "# A\n\n> Sources: Example, 2026-01-01\n"
-            "> Raw: [src](../../raw/t/src.md)\n\n"
+            "> Raw: [src](../../01.Raw/t/src.md)\n\n"
             "```lang`bad\nUnsupported 666K claim.\n```\n"
         )
         plain_wiki(self.root, "a.md", article)
@@ -640,7 +640,7 @@ class BlockquoteQuoteTest(WikiTestCase):
             "> the terminal should feel invisible to users\n",
         )
         make_wiki(self.root)
-        (self.root / "wiki" / "ai-research" / "ghostty.md").write_text(article)
+        (self.root / "02.Wiki" / "ai-research" / "ghostty.md").write_text(article)
         result = run_checker(self.root)
         self.assertNotIn("invisible to users", result.stdout)
 
@@ -648,7 +648,7 @@ class BlockquoteQuoteTest(WikiTestCase):
 class FenceIndentTest(WikiTestCase):
     def test_four_space_indented_backticks_are_not_a_fence(self):
         article = (
-            "# A\n\n> Sources: Example, 2026-01-01\n> Raw: [src](../../raw/t/src.md)\n\n"
+            "# A\n\n> Sources: Example, 2026-01-01\n> Raw: [src](../../01.Raw/t/src.md)\n\n"
             "    ```\n    some indented text\n\nUnsupported claim 777K here.\n"
         )
         plain_wiki(self.root, "a.md", article)
@@ -660,7 +660,7 @@ class BacktickNoMaterialTest(WikiTestCase):
     def test_backticked_path_still_suppresses(self):
         log = (
             "# Wiki Log\n\n"
-            "## [2026-05-01] ingest | no material: `raw/misc/notes.md`\n"
+            "## [2026-05-01] ingest | no material: `01.Raw/misc/notes.md`\n"
             "- Disposition: No material\n"
         )
         make_wiki(self.root, log=log)
@@ -720,12 +720,12 @@ class ExamplesSmokeTest(WikiTestCase):
     def test_examples_have_zero_suspects(self):
         raw_src = EXAMPLES_DIR / "2026-03-19-claude-code-statusline-landscape.md"
         article_src = EXAMPLES_DIR / "claude-code-statusline-landscape.md"
-        (self.root / "raw" / "ai-coding-tools").mkdir(parents=True)
-        (self.root / "raw" / "ai-coding-tools" / raw_src.name).write_text(raw_src.read_text())
-        (self.root / "wiki" / "ai-coding-tools").mkdir(parents=True)
-        (self.root / "wiki" / "ai-coding-tools" / article_src.name).write_text(article_src.read_text())
-        (self.root / "wiki" / "index.md").write_text("# Knowledge Base Index\n")
-        (self.root / "wiki" / "log.md").write_text("# Wiki Log\n")
+        (self.root / "01.Raw" / "ai-coding-tools").mkdir(parents=True)
+        (self.root / "01.Raw" / "ai-coding-tools" / raw_src.name).write_text(raw_src.read_text())
+        (self.root / "02.Wiki" / "ai-coding-tools").mkdir(parents=True)
+        (self.root / "02.Wiki" / "ai-coding-tools" / article_src.name).write_text(article_src.read_text())
+        (self.root / "02.Wiki" / "index.md").write_text("# Knowledge Base Index\n")
+        (self.root / "02.Wiki" / "log.md").write_text("# Wiki Log\n")
         result = run_checker(self.root)
         self.assertIn("0 fidelity suspect(s)", result.stdout)
         self.assertIn("0 evidence error(s)", result.stdout)
@@ -735,12 +735,12 @@ class RawInventoryTest(WikiTestCase):
     def test_reports_raw_file_never_compiled(self):
         make_wiki(self.root)
         result = run_checker(self.root)
-        self.assertIn("raw/misc/notes.md", result.stdout)
+        self.assertIn("01.Raw/misc/notes.md", result.stdout)
 
     def test_no_material_disposition_suppresses_report(self):
         log = (
             "# Wiki Log\n\n"
-            "## [2026-05-01] ingest | no material: raw/misc/notes.md\n"
+            "## [2026-05-01] ingest | no material: 01.Raw/misc/notes.md\n"
             "- Disposition: No material\n"
         )
         make_wiki(self.root, log=log)
@@ -748,17 +748,17 @@ class RawInventoryTest(WikiTestCase):
         self.assertNotIn("notes.md", result.stdout)
 
     def test_no_material_does_not_suppress_same_name_elsewhere(self):
-        (self.root / "raw" / "other").mkdir(parents=True)
-        (self.root / "raw" / "other" / "notes.md").write_text(SECOND_RAW)
+        (self.root / "01.Raw" / "other").mkdir(parents=True)
+        (self.root / "01.Raw" / "other" / "notes.md").write_text(SECOND_RAW)
         log = (
             "# Wiki Log\n\n"
-            "## [2026-05-01] ingest | no material: raw/misc/notes.md\n"
+            "## [2026-05-01] ingest | no material: 01.Raw/misc/notes.md\n"
             "- Disposition: No material\n"
         )
         make_wiki(self.root, log=log)
         result = run_checker(self.root)
-        self.assertNotIn("raw/misc/notes.md", result.stdout)
-        self.assertIn("raw/other/notes.md", result.stdout)
+        self.assertNotIn("01.Raw/misc/notes.md", result.stdout)
+        self.assertIn("01.Raw/other/notes.md", result.stdout)
 
 
 if __name__ == "__main__":

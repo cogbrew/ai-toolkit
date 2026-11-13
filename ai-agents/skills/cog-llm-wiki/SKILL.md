@@ -5,7 +5,7 @@ description: "Use when building or maintaining a personal LLM-powered knowledge 
 
 # Karpathy LLM Wiki
 
-Build and maintain a personal knowledge base using LLMs. You manage two directories: `raw/` (immutable source material) and `wiki/` (compiled knowledge articles). Sources go into raw/, you compile them into wiki articles, and the wiki compounds over time.
+Build and maintain a personal knowledge base using LLMs. You manage two directories: `01.Raw/` (immutable source material) and `02.Wiki/` (compiled knowledge articles). Sources go into 01.Raw/, you compile them into wiki articles, and the wiki compounds over time.
 
 Core ideas from Karpathy:
 - "The LLM writes and maintains the wiki; the human reads and asks questions."
@@ -15,44 +15,46 @@ Core ideas from Karpathy:
 
 Three layers, all under the user's project root:
 
-**raw/** — Immutable source material. You read, never modify. Organized by topic subdirectories (e.g., `raw/machine-learning/`).
+**01.Raw/** — Immutable source material. You read, never modify. Organized by topic subdirectories (e.g., `01.Raw/machine-learning/`).
 
-**wiki/** — Compiled knowledge articles. You have full ownership. Organized by topic subdirectories, one level only: `wiki/<topic>/<article>.md`. Contains two special files:
-- `wiki/index.md` — Global index. One row per article, grouped by topic, with link + summary + Updated date.
-- `wiki/log.md` — Append-only operation log.
+**02.Wiki/** — Compiled knowledge articles. You have full ownership. Organized by topic subdirectories, one level only: `02.Wiki/<topic>/<article>.md`. Contains two special files:
+- `02.Wiki/index.md` — Global index. One row per article, grouped by topic, with link + summary + Updated date.
+- `02.Wiki/log.md` — Append-only operation log.
 
 **SKILL.md** (this file) — Schema layer. Defines structure and workflow rules.
+
+In this fork the two folders are named `01.Raw/` and `02.Wiki/` (numbered so they sort in reading order in the Obsidian file explorer). Attachments live in `99.Attachments/`, which this skill ignores.
 
 Templates live in `references/` relative to this file. Read them when you need the exact format for raw files, articles, archive pages, or the index.
 
 ### Initialization
 
-Triggers only on the first Ingest. First confirm the current directory is the wiki root: if neither `raw/` nor `wiki/` exists here and the project instructions (AGENTS.md or CLAUDE.md) do not name this directory as the wiki root, ask the user to confirm the location and wait for the answer before creating anything. Never create them inside the skill's own folder. Then check whether `raw/` and `wiki/` exist. Create only what is missing; never overwrite existing files:
+Triggers only on the first Ingest. First confirm the current directory is the wiki root: if neither `01.Raw/` nor `02.Wiki/` exists here and the project instructions (AGENTS.md or CLAUDE.md) do not name this directory as the wiki root, ask the user to confirm the location and wait for the answer before creating anything. Never create them inside the skill's own folder. Then check whether `01.Raw/` and `02.Wiki/` exist. Create only what is missing; never overwrite existing files:
 
-- `raw/` directory (with `.gitkeep`)
-- `wiki/` directory (with `.gitkeep`)
-- `wiki/index.md` — heading `# Knowledge Base Index`, empty body
-- `wiki/log.md` — heading `# Wiki Log`, empty body
+- `01.Raw/` directory (with `.gitkeep`)
+- `02.Wiki/` directory (with `.gitkeep`)
+- `02.Wiki/index.md` — heading `# Knowledge Base Index`, empty body
+- `02.Wiki/log.md` — heading `# Wiki Log`, empty body
 
 If Query or Lint cannot find the wiki structure, tell the user: "Run an ingest first to initialize the wiki." Do not auto-create.
 
 ## The Grounding Invariant
 
-Every load-bearing fact in wiki/ — numbers, dates, direct quotes — exists verbatim in the raw/ files linked by that article's Raw field. Compile *establishes* this invariant (locate before you write); lint *verifies* it (`scripts/check_evidence.py` greps the high-signal literals — suffixed or large numbers, decimals, ISO dates, longer quotes — in the linked raws; the compile-time locate-before-write rule covers the rest). Because raw/ is immutable, a verified article stays verified; the script re-checks the whole wiki in seconds, so there is no incremental state to maintain.
+Every load-bearing fact in 02.Wiki/ — numbers, dates, direct quotes — exists verbatim in the 01.Raw/ files linked by that article's Raw field. Compile *establishes* this invariant (locate before you write); lint *verifies* it (`scripts/check_evidence.py` greps the high-signal literals — suffixed or large numbers, decimals, ISO dates, longer quotes — in the linked raws; the compile-time locate-before-write rule covers the rest). Because 01.Raw/ is immutable, a verified article stays verified; the script re-checks the whole wiki in seconds, so there is no incremental state to maintain.
 
 ---
 
 ## Ingest
 
-Fetch a source into raw/, then compile it into wiki/ — unless the source adds nothing new. Always fetch; whether to compile depends on the triage below.
+Fetch a source into 01.Raw/, then compile it into 02.Wiki/ — unless the source adds nothing new. Always fetch; whether to compile depends on the triage below.
 
-### Fetch (raw/)
+### Fetch (01.Raw/)
 
 1. Get the source content using whatever web or file tools your environment provides. If nothing can reach the source, ask the user to paste it directly.
 
-2. Pick a topic directory. Check existing `raw/` subdirectories first; reuse one if the topic is close enough. Create a new subdirectory only for genuinely distinct topics.
+2. Pick a topic directory. Check existing `01.Raw/` subdirectories first; reuse one if the topic is close enough. Create a new subdirectory only for genuinely distinct topics.
 
-3. Save as `raw/<topic>/YYYY-MM-DD-descriptive-slug.md`.
+3. Save as `01.Raw/<topic>/YYYY-MM-DD-descriptive-slug.md`.
    - Slug from source title, kebab-case, max 60 characters.
    - Published date unknown → omit the date prefix from the file name (e.g., `descriptive-slug.md`). The metadata Published field still appears; set it to `Unknown`.
    - If a file with the same name already exists, append a numeric suffix (e.g., `descriptive-slug-2.md`).
@@ -63,7 +65,7 @@ Fetch a source into raw/, then compile it into wiki/ — unless the source adds 
 
 ### Triage
 
-After saving the raw file and before editing wiki/, search wiki/ with the source's key entities and synonyms, then state the disposition:
+After saving the raw file and before editing 02.Wiki/, search 02.Wiki/ with the source's key entities and synonyms, then state the disposition:
 
 - **New** — creates one or more new articles.
 - **Update** — merges into existing article(s).
@@ -72,7 +74,7 @@ After saving the raw file and before editing wiki/, search wiki/ with the source
 
 New, Update, and Disputed may be combined. No material is exclusive.
 
-### Compile (wiki/)
+### Compile (02.Wiki/)
 
 Determine where the new content belongs:
 
@@ -87,8 +89,8 @@ These are not mutually exclusive. A single source may warrant merging into one a
 See `references/article-template.md` for article format. Key points:
 - Metadata lines (Sources, Raw, Updated, Archived) are blockquote lines exactly as in the template (`> Raw: ...`), never list items (`- Raw: ...`). `scripts/check_evidence.py` recognizes only the blockquote form, so a list-item Raw field makes lint report the article as having no Raw field. Follow the template, not the format of existing articles.
 - Sources field: author, organization, or publication name + date, semicolon-separated.
-- Raw field: markdown links to raw/ files, semicolon-separated.
-- Relative paths from `wiki/<topic>/` use `../../raw/<topic>/<file>.md` (two levels up to project root).
+- Raw field: markdown links to 01.Raw/ files, semicolon-separated.
+- Relative paths from `02.Wiki/<topic>/` use `../../01.Raw/<topic>/<file>.md` (two levels up to project root).
 
 ### Cascade Updates
 
@@ -100,9 +102,9 @@ Archive pages are never cascade-updated (they are point-in-time snapshots).
 
 ### Post-Ingest
 
-Update `wiki/index.md`: add or update entries for every touched article. When adding a new topic section, include a one-line description. The Updated date reflects when the article's knowledge content last changed, not the file system timestamp. See `references/index-template.md` for format.
+Update `02.Wiki/index.md`: add or update entries for every touched article. When adding a new topic section, include a one-line description. The Updated date reflects when the article's knowledge content last changed, not the file system timestamp. See `references/index-template.md` for format.
 
-Append to `wiki/log.md`:
+Append to `02.Wiki/log.md`:
 
 ```
 ## [YYYY-MM-DD] ingest | <primary article title>
@@ -111,7 +113,7 @@ Append to `wiki/log.md`:
 - Updated: <cascade-updated article title>
 ```
 
-Omit `- Updated:` lines when no cascade updates occur. For No material, log and stop. Use a project-root-relative raw path (for example, `raw/topic/file.md`):
+Omit `- Updated:` lines when no cascade updates occur. For No material, log and stop. Use a project-root-relative raw path (for example, `01.Raw/topic/file.md`):
 
 ```
 ## [YYYY-MM-DD] ingest | no material: <project-root-relative raw file path>
@@ -126,7 +128,7 @@ Use only when the user explicitly asks to research a topic or gather sources int
 
 1. Split the topic into a few angles. For each, search with a wide net — official names, abbreviations, and synonyms, not just the literal keywords.
 2. For any core claim you expect to conclude, deliberately search the opposing side: failures, criticism, failed replications.
-3. Save selected sources to raw/ as usual. Searching may run in parallel; compilation must not — compile one source at a time, because index.md, log.md, and cascade updates are shared state.
+3. Save selected sources to 01.Raw/ as usual. Searching may run in parallel; compilation must not — compile one source at a time, because index.md, log.md, and cascade updates are shared state.
 
 ---
 
@@ -139,23 +141,23 @@ Search the wiki and answer questions. Examples of triggers:
 
 ### Steps
 
-1. Read `wiki/index.md` to locate candidate articles, then full-text search wiki/ with the topic's key terms *and their synonyms*. Never claim the wiki has no relevant content until both the index and the full-text search come back empty — and say that you searched.
+1. Read `02.Wiki/index.md` to locate candidate articles, then full-text search 02.Wiki/ with the topic's key terms *and their synonyms*. Never claim the wiki has no relevant content until both the index and the full-text search come back empty — and say that you searched.
 2. Read the articles you found and synthesize an answer.
-3. Prefer wiki content over your own training knowledge. Cite sources with markdown links: `[Article Title](wiki/topic/article.md)` (project-root-relative paths for in-conversation citations; within wiki/ files, use paths relative to the current file).
+3. Prefer wiki content over your own training knowledge. Cite sources with markdown links: `[Article Title](02.Wiki/topic/article.md)` (project-root-relative paths for in-conversation citations; within 02.Wiki/ files, use paths relative to the current file).
 4. Output the answer in the conversation. Do not write files unless asked.
 
 ### Archiving
 
 When the user explicitly asks to archive or save the answer to the wiki:
 
-1. Write the answer as a new wiki page. See `references/archive-template.md`. When converting conversation citations to the archive page, rewrite project-root-relative paths (e.g., `wiki/topic/article.md`) to file-relative paths (e.g., `../topic/article.md` or `article.md` for same-directory).
+1. Write the answer as a new wiki page. See `references/archive-template.md`. When converting conversation citations to the archive page, rewrite project-root-relative paths (e.g., `02.Wiki/topic/article.md`) to file-relative paths (e.g., `../topic/article.md` or `article.md` for same-directory).
    - Sources: markdown links to the wiki articles cited in the answer.
-   - No Raw field (content does not come from raw/).
+   - No Raw field (content does not come from 01.Raw/).
    - File name reflects the query topic, e.g., `transformer-architectures-overview.md`.
    - Place in the most relevant topic directory.
 2. Always create a new page. Never merge into existing articles (archive content is a synthesized answer, not raw material).
-3. Update `wiki/index.md`. Prefix the Summary with `[Archived]`.
-4. Append to `wiki/log.md`:
+3. Update `02.Wiki/index.md`. Prefix the Summary with `[Archived]`.
+4. Append to `02.Wiki/log.md`:
    ```
    ## [YYYY-MM-DD] query | Archived: <page title>
    ```
@@ -170,23 +172,23 @@ Quality checks on the wiki. Three categories with different authority levels.
 
 Fix these automatically:
 
-**Index consistency** — compare `wiki/index.md` against actual wiki/ files (excluding index.md and log.md):
+**Index consistency** — compare `02.Wiki/index.md` against actual 02.Wiki/ files (excluding index.md and log.md):
 - File exists but missing from index → add entry with `(no summary)` placeholder. For Updated, use the article's metadata Updated date if present (for archive pages, the Archived date); otherwise fall back to file's last modified date.
 - Index entry points to nonexistent file → mark as `[MISSING]` in the index. Do not delete the entry; let the user decide.
 - Index entry's Updated differs from the article's metadata Updated (or Archived, for archive pages) → update the index entry to match the article.
 
-**Internal links** — for every markdown link in wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below), excluding See Also section links (handled by the See Also rule below), and excluding index.md/log.md (handled above):
-- Target does not exist → search wiki/ for a file with the same name elsewhere.
+**Internal links** — for every markdown link in 02.Wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below), excluding See Also section links (handled by the See Also rule below), and excluding index.md/log.md (handled above):
+- Target does not exist → search 02.Wiki/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero or multiple matches → report to the user.
 
-**Raw references** — every link in a Raw field must point to an existing raw/ file:
-- Target does not exist → search raw/ for a file with the same name elsewhere.
+**Raw references** — every link in a Raw field must point to an existing 01.Raw/ file:
+- Target does not exist → search 01.Raw/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero or multiple matches → report to the user.
 
 **See Also** — within each topic directory:
-- Target of a See Also link does not exist → search wiki/ for a file with the same name elsewhere.
+- Target of a See Also link does not exist → search 02.Wiki/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero matches → remove the link (a dead cross-reference is not load-bearing).
   - Multiple matches → report to the user.
@@ -197,7 +199,7 @@ Run these mechanically with `python3 <skill-dir>/scripts/check_evidence.py <proj
 
 **Source fidelity** — reported suspects are candidates, not verdicts: derived values and product names may appear. Judge each against the raw context and report only real mismatches.
 
-**Evidence errors** — articles the script cannot verify (missing Raw field, unresolvable Raw links, or Raw links escaping `raw/`). These always need a decision, not a fix from the script.
+**Evidence errors** — articles the script cannot verify (missing Raw field, unresolvable Raw links, or Raw links escaping `01.Raw/`). These always need a decision, not a fix from the script.
 
 **Unreferenced raw files** — files logged with a No material disposition are excluded; everything else is a genuine backlog reminder.
 
@@ -217,7 +219,7 @@ These rely on your judgment. Report findings without auto-fixing:
 
 ### Post-Lint
 
-Append to `wiki/log.md`:
+Append to `02.Wiki/log.md`:
 
 ```
 ## [YYYY-MM-DD] lint | <N> issues found, <M> auto-fixed
@@ -228,7 +230,7 @@ Append to `wiki/log.md`:
 ## Conventions
 
 - Standard markdown with relative links throughout.
-- wiki/ supports one level of topic subdirectories only. No deeper nesting.
+- 02.Wiki/ supports one level of topic subdirectories only. No deeper nesting.
 - Today's date for log entries, Collected dates, and Archived dates. Updated dates reflect when the article's knowledge content last changed. Published dates come from the source (use `Unknown` when unavailable).
-- Inside wiki/ files, all markdown links use paths relative to the current file. In conversation output, use project-root-relative paths (e.g., `wiki/topic/article.md`).
-- Ingest updates both `wiki/index.md` and `wiki/log.md` (a No material ingest updates only the log). Archive (from Query) updates both. Lint updates `wiki/log.md` (and `wiki/index.md` only when auto-fixing index entries). Plain queries do not write any files.
+- Inside 02.Wiki/ files, all markdown links use paths relative to the current file. In conversation output, use project-root-relative paths (e.g., `02.Wiki/topic/article.md`).
+- Ingest updates both `02.Wiki/index.md` and `02.Wiki/log.md` (a No material ingest updates only the log). Archive (from Query) updates both. Lint updates `02.Wiki/log.md` (and `02.Wiki/index.md` only when auto-fixing index entries). Plain queries do not write any files.

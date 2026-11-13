@@ -27,7 +27,7 @@ This directory contains real files from a knowledge base maintained with `karpat
 ## Operation Log
 
 The log records every action:
-- `ingest` — source collected into raw/ and compiled (with Disposition: New / Update / Disputed, or `no material` when nothing was worth compiling)
+- `ingest` — source collected into 01.Raw/ and compiled (with Disposition: New / Update / Disputed, or `no material` when nothing was worth compiling)
 - `query` — archived query results
 - `lint` — quality checks and their outcomes
 
