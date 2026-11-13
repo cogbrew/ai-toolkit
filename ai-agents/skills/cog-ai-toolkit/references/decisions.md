@@ -29,6 +29,8 @@
 - `cog-vue-uikit` 의 근거: 프로젝트 `infra-iscim-app` 의 `frontend` 스킬 사본과 `ai-config` 본 4개 문서(data-tables, detail-view, page-header, ux-patterns)를 읽어 범용 원칙과 @nuxt/ui 구현으로 나눴다. 두 본은 3~4줄씩 다르고 `ai-config` 본이 프로젝트 고유 표현을 일반화해 두었다. 뺀 것은 프로젝트 고유 화면과 용어(IDP 리포트, 배포 관리 등), 기능 권한 컴포저블(`useFeaturePerms`) 사용법, 프로젝트 문서 참조다. 나누는 경계는 에이전트가 판단했고 확인이 필요하다.
 - `cog-vue-uikit` 호출 방식: 직접 호출과 description 자동 호출만 쓴다. Claude 시험(질문당 1회)에서 App* 부품을 쓰는 화면 요청 4개(목록 컬럼과 정렬, 확인 모달 실패 표시, 모달 재오픈 에러, 상세 배치)는 모두 호출됐고, 폴더 구조 질문과 파이썬 코드와 보고서 목차 3개는 호출되지 않았다. 동작 시험은 하지 않았다.
 - 범용 스킬(`cog-django`, `cog-vue`, `cog-vue-uikit`)과 프로젝트 스킬의 구분: 범용 규칙은 `ai-toolkit` 에 두고, 프로젝트 스킬과 지침에는 그 프로젝트의 사실(구조 현황, 명령, 화면과 메뉴 목록, 도메인 용어, 백엔드 계약)만 둔다. 같은 규칙이 두 곳에 있으면 어긋난다.
+- `cog-llm-wiki`: Astro-Han/karpathy-llm-wiki(MIT, Karpathy 의 LLM Wiki 방식을 구현한 커뮤니티 스킬)를 개인용으로 가져와 `SKILL.md` 의 `name` 만 바꿨고 나머지는 원본과 같다(diff 로 확인). 직접 고쳐 쓸 것이라 가져온 스킬의 래퍼 폴더 방식을 쓰지 않고 `cog-` 접두사 스킬로 `ai-agents/skills/cog-llm-wiki/` 에 두었다. 가져온 것은 `SKILL.md`, `references/`(템플릿 4개), `scripts/check_evidence.py`, `tests/`, `examples/`, `LICENSE` 이고 `README.md`, `assets/`, `.gitignore` 는 스킬 동작과 무관해 뺐다. 위키 데이터(`raw/`, `wiki/`)는 일상정보가 들어가므로 이 저장소에 두지 않고 별도 저장소에 둔다.
+- `cog-llm-wiki` 시험(2026-11-13): `tests/` 52개 통과. 한국어 위키 문서에서 `check_evidence.py` 가 원문에 없는 수치·날짜·인용을 잡고 있는 값은 잡지 않았다(작은 사례 1벌). Claude 시험(질문당 1회)에서 한국어 위키 요청 3개(추가, 조회, lint)는 모두 자동 호출됐고, 무관한 요청 3개(파이썬 코드, 일반 설명, 문장 윤문)에서는 호출되지 않았다. 직접 호출은 파일을 읽고 규칙의 형식대로 raw 파일을 쓰려 했으나, 비대화형이라 쓰기가 거부되어 결과 파일은 확인하지 못했다. Codex·Antigravity 는 시험하지 않았다.
 
 ## 아직 정하지 않은 것
 
@@ -50,3 +52,5 @@
 - `cog-vue-uikit` 에는 `nuxt-ui` 폴더만 있다. 다른 UI 라이브러리를 쓰게 되면 `references/frameworks/<라이브러리>/` 에 패턴 파일 4개(data-list, detail-view, page-header, feedback-form)를 새로 만든다. 그 라이브러리의 공식 문서를 확인해서 쓰고, 지금은 만들지 않았다.
 - `cog-report-writer` 는 근거 자료(실제 보고서 샘플)가 없어 `slop-rewrite` 가이드라인을 참고해 만들었다. 제안 보고서의 본론 구성은 정하지 않았다. 색 코드와 CSS 는 현재 렌더링으로 다시 확인하지 않았다. 보고서를 실제로 쓰게 하는 동작 시험은 하지 않았다. 이 스킬의 흐름(요약을 맨 위)과 가이드라인의 유형별 순서가 어긋날 때의 우선순위는 에이전트가 정했고 사용자 확인이 필요하다.
 - `cog-vue` 로 코드를 실제로 만드는 과제와 규칙 지킴 여부는 시험하지 못했다. 시험한 것은 호출 여부뿐이다. 환경변수 파일의 틀(.env.example) 규칙은 파일을 읽지 않아 담지 못했다.
+- `cog-llm-wiki` 가 말하는 프로젝트 루트는 정하지 않았다. 위키 작업 공간이 정해지면 그 경로를 `SKILL.md` 에 명시해 고친다. 시험에서 자동 호출 3개 중 2개(추가, 조회)가 위키 폴더가 아니라 스킬 폴더를 루트로 보았다(각 1회). 원본의 `SKILL.md` 가 「user's project root」라고만 쓰고 위치를 정하지 않아서로 보인다. `SKILL.md` 의 `description` 은 영어 원본 그대로이고 한국어 요청에서 호출되는 것은 확인했으나, 더 다양한 문구에서의 호출률은 모른다.
+- `cog-llm-wiki` 의 ingest 결과물(`raw/`, `wiki/`, `index.md`, `log.md`)이 규칙대로 만들어지는지, `raw/` 에 쌓아 두고 일괄 처리하는 절차(원본에는 없음)가 필요한지는 실제로 쓰면서 정한다. 전역 연결은 사용자가 `install_ai_toolkit.sh --apply` 로 해야 쓸 수 있다.
