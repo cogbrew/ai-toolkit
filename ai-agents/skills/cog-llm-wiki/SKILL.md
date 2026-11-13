@@ -27,7 +27,7 @@ Templates live in `references/` relative to this file. Read them when you need t
 
 ### Initialization
 
-Triggers only on the first Ingest. Check whether `raw/` and `wiki/` exist. Create only what is missing; never overwrite existing files:
+Triggers only on the first Ingest. First confirm the current directory is the wiki root: if neither `raw/` nor `wiki/` exists here and the project instructions (AGENTS.md or CLAUDE.md) do not name this directory as the wiki root, ask the user to confirm the location and wait for the answer before creating anything. Never create them inside the skill's own folder. Then check whether `raw/` and `wiki/` exist. Create only what is missing; never overwrite existing files:
 
 - `raw/` directory (with `.gitkeep`)
 - `wiki/` directory (with `.gitkeep`)
